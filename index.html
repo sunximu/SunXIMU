@@ -1,0 +1,4238 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>孙熙穆个人网站 Homepage</title>
+  <style>
+    @font-face {
+      font-family: "HYMacH7";
+      src: url("网站素材/HYMacH7-85W.ttf") format("truetype");
+      font-weight: 850;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: "AaGuXian";
+      src: url("网站素材/AaGuXian.ttf") format("truetype");
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    /* 基础重置与首页黑色舞台 */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --logo-top: 48px;
+      --logo-left: 50vw;
+      --logo-width: 156px;
+      --logo-hover-scale: 1;
+      --nav-progress: 0;
+      --nav-y: -10px;
+      --home-menu-opacity: 1;
+      --page-bg: #000;
+      --stage-y: 0px;
+      --stage-opacity: 1;
+      --identity-opacity: 0;
+      --identity-y: 8vh;
+      --information-opacity: 0;
+      --information-y: 10vh;
+      --projects-opacity: 0;
+      --projects-y: 10vh;
+      --project-list-opacity: 0;
+      --project-list-y: 10vh;
+      --project-list-cover: 0;
+      --project-list-orb-scale: 0;
+      --project-list-final: 0;
+      --project-list-content: 0;
+      --project-list-base-opacity: 0;
+      --project-list-final-opacity: 0;
+    }
+
+    html {
+      width: 100%;
+      min-height: 100%;
+      background: var(--page-bg);
+    }
+
+    body.custom-cursor-active,
+    body.custom-cursor-active * {
+      cursor: none !important;
+    }
+
+    .magnetic-target {
+      cursor: pointer;
+    }
+
+    body {
+      width: 100%;
+      min-height: 540vh;
+      overflow-x: hidden;
+      overflow-y: auto;
+      background: var(--page-bg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      user-select: none;
+      -webkit-user-select: none;
+      position: relative;
+    }
+
+    .site-logo {
+      position: fixed;
+      top: var(--logo-top);
+      left: var(--logo-left);
+      z-index: 60;
+      width: var(--logo-width);
+      height: auto;
+      transform: translateX(-50%) scale(var(--logo-hover-scale));
+      filter: brightness(0) invert(1);
+      cursor: pointer;
+      pointer-events: auto;
+      transform-origin: center;
+      transition: filter 260ms ease;
+    }
+
+    .site-logo:hover {
+      --logo-hover-scale: 1.08;
+      filter: brightness(0) saturate(100%) invert(18%) sepia(95%) saturate(4307%) hue-rotate(340deg) brightness(101%) contrast(94%);
+    }
+
+    body.nav-ready .site-logo:hover {
+      filter: brightness(0);
+    }
+
+    body.nav-shadow-ready .site-logo {
+      filter: brightness(0) invert(1) drop-shadow(0 2px 5px rgba(0, 0, 0, 0.34));
+    }
+
+    body.nav-shadow-ready.nav-ready .site-logo:hover {
+      filter: brightness(0) drop-shadow(0 2px 5px rgba(255, 255, 255, 0.32));
+    }
+
+    body.project-list-ready .site-logo,
+    body.project-list-ready.nav-shadow-ready .site-logo {
+      filter: brightness(0) saturate(100%) invert(18%) sepia(95%) saturate(4307%) hue-rotate(340deg) brightness(101%) contrast(94%);
+    }
+
+    .logo-hover-menu {
+      position: fixed;
+      top: calc(var(--logo-top) + var(--logo-width) * 0.58 + 18px);
+      left: var(--logo-left);
+      z-index: 58;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(16px, 3vw, 44px);
+      opacity: 0;
+      pointer-events: none;
+      transform: translate(-50%, -8px);
+      transition: opacity 160ms steps(3, end), transform 180ms steps(3, end);
+    }
+
+    .site-logo:hover + .logo-hover-menu,
+    .logo-hover-menu:hover,
+    body.logo-menu-open .logo-hover-menu {
+      opacity: var(--home-menu-opacity);
+      pointer-events: auto;
+      transform: translate(-50%, 0);
+    }
+
+    .nav-links {
+      position: fixed;
+      top: var(--nav-top, clamp(22px, 4.3vh, 42px));
+      right: var(--nav-right, clamp(20px, 4.6vw, 62px));
+      z-index: 55;
+      display: flex;
+      align-items: center;
+      gap: clamp(16px, 3vw, 44px);
+      opacity: var(--nav-progress);
+      pointer-events: none;
+      transform: translateY(var(--nav-y));
+    }
+
+    body.nav-ready .nav-links {
+      pointer-events: auto;
+    }
+
+    .nav-links a,
+    .logo-hover-menu a {
+      color: #fff;
+      text-decoration: none;
+      font-size: clamp(12px, 1.15vw, 17px);
+      font-family: "HYMacH7", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-weight: 850;
+      line-height: 1;
+      letter-spacing: 0;
+      white-space: nowrap;
+      transform: scale(1);
+      transform-origin: center;
+      transition: color 240ms ease, transform 240ms cubic-bezier(.2, .8, .2, 1), opacity 240ms ease;
+    }
+
+    body.nav-shadow-ready .nav-links a {
+      text-shadow: 0 2px 5px rgba(0, 0, 0, 0.38);
+    }
+
+    body.nav-shadow-ready .nav-links a:hover {
+      text-shadow: 0 2px 5px rgba(255, 255, 255, 0.34);
+    }
+
+    body.project-list-ready .nav-links a,
+    body.project-list-ready .logo-hover-menu a {
+      color: #fd0038;
+      text-shadow: none;
+    }
+
+    .nav-links a:hover,
+    .logo-hover-menu a:hover {
+      color: #000;
+      transform: scale(1.08);
+    }
+
+    .logo-hover-menu a:hover {
+      color: #e81840;
+    }
+
+    .site-cursor {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      --cursor-color: #fff;
+      --cursor-gap-left: calc(50vw - 14px);
+      --cursor-gap-right: calc(50vw + 14px);
+      --cursor-gap-top: calc(50vh - 14px);
+      --cursor-gap-bottom: calc(50vh + 14px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 140ms ease;
+    }
+
+    body.project-list-ready .site-cursor {
+      --cursor-color: #fd0038;
+    }
+
+    body.project-cursor-red .cursor-box {
+      border-color: var(--cursor-color);
+    }
+
+    body.projects-ready .cursor-line {
+      opacity: 1;
+    }
+
+    body.project-list-ready .cursor-line {
+      opacity: 1;
+    }
+
+    body.custom-cursor-active.cursor-seen .site-cursor {
+      opacity: 1;
+    }
+
+    .cursor-line {
+      position: absolute;
+      opacity: 0.72;
+      transform: translate3d(0, 0, 0);
+      transition: transform 54ms linear;
+      will-change: transform;
+    }
+
+    .cursor-line-x {
+      left: 0;
+      top: 0;
+      width: 100vw;
+      height: 0.5px;
+      background: linear-gradient(
+        to right,
+        var(--cursor-color) 0 var(--cursor-gap-left),
+        transparent var(--cursor-gap-left) var(--cursor-gap-right),
+        var(--cursor-color) var(--cursor-gap-right) 100%
+      );
+    }
+
+    .cursor-line-y {
+      left: 0;
+      top: 0;
+      width: 0.5px;
+      height: 100vh;
+      background: linear-gradient(
+        to bottom,
+        var(--cursor-color) 0 var(--cursor-gap-top),
+        transparent var(--cursor-gap-top) var(--cursor-gap-bottom),
+        var(--cursor-color) var(--cursor-gap-bottom) 100%
+      );
+    }
+
+    .cursor-red-line {
+      position: absolute;
+      opacity: 0.92;
+      pointer-events: none;
+      transform: translate3d(0, 0, 0);
+      transition: transform 54ms linear;
+      will-change: transform;
+    }
+
+    .cursor-red-line-x {
+      left: 0;
+      top: 0;
+      width: 100vw;
+      height: 0.5px;
+      background: var(--cursor-red-x-bg, transparent);
+    }
+
+    .cursor-red-line-y {
+      left: 0;
+      top: 0;
+      width: 0.5px;
+      height: 100vh;
+      background: var(--cursor-red-y-bg, transparent);
+    }
+
+    .cursor-box {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 14px;
+      height: 14px;
+      border: 0.5px solid var(--cursor-color);
+      background: transparent;
+      transform: translate3d(-50%, -50%, 0);
+      transition: none;
+      will-change: transform, width, height;
+    }
+
+    .cursor-red-box {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 14px;
+      height: 14px;
+      pointer-events: none;
+      transform: translate3d(-50%, -50%, 0);
+      transition: none;
+      will-change: transform, width, height;
+    }
+
+    .cursor-red-box-edge {
+      position: absolute;
+      background: transparent;
+      pointer-events: none;
+    }
+
+    .cursor-red-box-top,
+    .cursor-red-box-bottom {
+      left: 0;
+      width: 100%;
+      height: 0.5px;
+    }
+
+    .cursor-red-box-left,
+    .cursor-red-box-right {
+      top: 0;
+      width: 0.5px;
+      height: 100%;
+    }
+
+    .cursor-red-box-top {
+      top: 0;
+      background: var(--cursor-red-box-top-bg, transparent);
+    }
+
+    .cursor-red-box-bottom {
+      bottom: 0;
+      background: var(--cursor-red-box-bottom-bg, transparent);
+    }
+
+    .cursor-red-box-left {
+      left: 0;
+      background: var(--cursor-red-box-left-bg, transparent);
+    }
+
+    .cursor-red-box-right {
+      right: 0;
+      background: var(--cursor-red-box-right-bg, transparent);
+    }
+
+    /* 容器布局：在屏幕居中对齐网格 */
+    #sandbox-container {
+      width: 100%;
+      height: 100dvh;
+      position: fixed;
+      inset: 0;
+      cursor: crosshair;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      background: var(--page-bg);
+      opacity: var(--stage-opacity);
+      transform: translate3d(0, var(--stage-y), 0);
+      will-change: transform, opacity;
+    }
+
+    #grid {
+      display: grid;
+      justify-content: center;
+      align-content: center;
+    }
+
+    /* 每一个矢量单元格的规格 */
+    .cell {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none; /* 让鼠标事件直接穿透至背景大容器，方便全局高精度计算 */
+    }
+
+    .shape-wrapper {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* 堆叠的不同形态形状 */
+    .shape-state {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0; /* 默认隐藏 */
+      pointer-events: none;
+      transition: opacity 0.07s ease-out; /* 极其顺滑的物理融合动画 */
+    }
+
+    /* 默认初始状态（空心圆形态）初始完全透明 */
+    .shape-state.current {
+      opacity: 0;
+    }
+
+    /* 矢量控制微调 */
+    svg {
+      width: 100%;
+      height: 100%;
+      padding: 1px; /* 极小防裁切边距 */
+    }
+
+    /* 吉祥物盒子：居中叠在网格上方，拒绝接收鼠标指针，使得点击可以自由穿透到网格 */
+    .mascot-wrapper {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      z-index: 20;
+    }
+
+    .mascot-svg {
+      width: min(54vw, 58vh);
+      height: min(54vw, 58vh);
+      min-width: 240px;
+      min-height: 240px;
+      max-width: 560px;
+      max-height: 560px;
+      overflow: visible;
+    }
+
+    .identity-scene {
+      position: fixed;
+      inset: 0;
+      z-index: 30;
+      display: grid;
+      place-items: center;
+      min-height: 100dvh;
+      opacity: var(--identity-opacity);
+      pointer-events: none;
+      transform: translate3d(0, var(--identity-y), 0);
+      will-change: opacity, transform;
+    }
+
+    body.identity-ready .identity-scene {
+      pointer-events: auto;
+    }
+
+    .identity-content {
+      position: relative;
+      width: min(82vw, 820px);
+      height: min(53vw, 540px);
+      min-height: 390px;
+      padding: 0;
+      transform: translateY(clamp(8px, 1.6vh, 18px));
+    }
+
+    .peek-mascot {
+      position: fixed;
+      top: clamp(82px, 13vh, 160px);
+      right: clamp(-292px, -15vw, -182px);
+      z-index: 36;
+      width: clamp(475px, 46vw, 780px);
+      height: auto;
+      opacity: max(var(--identity-opacity), calc(var(--information-opacity) * 0.92));
+      pointer-events: none;
+      transform: translateX(var(--peek-exit-x, 0)) rotate(calc(-9deg + var(--peek-rotate, 0deg))) translateY(var(--identity-y)) scale(var(--peek-scale, 1));
+      transform-origin: center;
+      filter: drop-shadow(0 14px 0 rgba(0, 0, 0, 0.12));
+      transition: transform 260ms cubic-bezier(.2, .8, .2, 1), opacity 220ms ease;
+      will-change: transform, opacity;
+    }
+
+    body.peek-slide-out .peek-mascot {
+      --peek-exit-x: 72vw;
+      transition-duration: 180ms;
+      transition-timing-function: cubic-bezier(.7, 0, 1, .45);
+    }
+
+    .peek-eye {
+      transform-box: fill-box;
+      transform-origin: center;
+      transition: transform 110ms steps(2, end);
+    }
+
+    .peek-pupil {
+      transition: r 90ms steps(2, end);
+    }
+
+    body.peek-surprise .peek-mascot {
+      --peek-scale: 1.18;
+    }
+
+    body.peek-surprise .peek-eye {
+      transform: scale(1.62);
+    }
+
+    body.peek-surprise .peek-pupil {
+      r: 9px;
+    }
+
+    .peek-wow {
+      position: fixed;
+      top: clamp(560px, 72vh, 780px);
+      right: clamp(102px, 9vw, 160px);
+      z-index: 37;
+      color: #fff;
+      font-family: "HYMacH7", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: clamp(102px, 10.8vw, 172px);
+      font-weight: 850;
+      line-height: 0.9;
+      letter-spacing: 0;
+      opacity: 0;
+      pointer-events: none;
+      transform: translate3d(var(--peek-exit-x, 0), 18px, 0) rotate(9deg) scale(0.82);
+      transform-origin: center;
+      text-shadow: 0 10px 0 rgba(0, 0, 0, 0.16);
+      transition: opacity 120ms steps(2, end), transform 160ms cubic-bezier(.2, .8, .2, 1);
+      will-change: opacity, transform;
+    }
+
+    body.peek-face-wow .peek-wow {
+      opacity: max(var(--identity-opacity), var(--information-opacity));
+      transform: translate3d(var(--peek-exit-x, 0), 0, 0) rotate(9deg) scale(1.18);
+    }
+
+    body.peek-slide-out .peek-wow {
+      transition-duration: 180ms;
+      transition-timing-function: cubic-bezier(.7, 0, 1, .45);
+    }
+
+    .information-scene {
+      position: fixed;
+      inset: 0;
+      z-index: 34;
+      min-height: 100dvh;
+      overflow: hidden;
+      background: #fd0038;
+      opacity: var(--information-opacity);
+      pointer-events: none;
+      transform: translate3d(0, var(--information-y), 0);
+      will-change: opacity, transform;
+    }
+
+    body.information-ready .information-scene {
+      pointer-events: auto;
+    }
+
+    .projects-scene {
+      position: fixed;
+      inset: 0;
+      z-index: 38;
+      min-height: 100dvh;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      background: #fd0038;
+      opacity: var(--projects-opacity);
+      pointer-events: none;
+      transform: translate3d(0, var(--projects-y), 0);
+      will-change: opacity, transform;
+    }
+
+    body.projects-ready .projects-scene {
+      pointer-events: auto;
+    }
+
+    .projects-hourglass {
+      display: block;
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+      color: #fff;
+      shape-rendering: geometricPrecision;
+      overflow: visible;
+    }
+
+    .quiet-wave-canvas {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 1400ms cubic-bezier(.22, .72, .16, 1);
+    }
+
+    .projects-scene[data-project-shape="quiet"] .quiet-wave-canvas {
+      opacity: 0.62;
+    }
+
+    .motion-shape-canvas {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 1300ms cubic-bezier(.22, .72, .16, 1);
+    }
+
+    .projects-scene[data-project-shape="motion"] .motion-shape-canvas {
+      opacity: 1;
+    }
+
+    .project-marquee-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      opacity: 0;
+      pointer-events: none;
+      overflow: hidden;
+      transition: opacity 620ms cubic-bezier(.2, .8, .2, 1);
+    }
+
+    .projects-scene[data-project-shape="base"] .project-marquee-layer {
+      opacity: 1;
+    }
+
+    .project-marquee-red-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 4;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 620ms cubic-bezier(.2, .8, .2, 1);
+      clip-path: url(#project-halves-clip);
+    }
+
+    .projects-scene[data-project-shape="base"] .project-marquee-red-layer {
+      opacity: 1;
+    }
+
+    .project-marquee-track {
+      position: absolute;
+      left: 0;
+      top: 50%;
+      width: 100%;
+      height: clamp(38px, 5.4vw, 78px);
+      transform: translateY(-50%);
+      overflow: visible;
+    }
+
+    .project-marquee-char {
+      position: absolute;
+      left: 0;
+      top: 50%;
+      color: #fff;
+      font-family: "HYMacH7", "PingFang TC", "PingFang SC", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: clamp(30px, 4.35vw, 68px);
+      font-weight: 850;
+      line-height: .72;
+      letter-spacing: 0;
+      white-space: nowrap;
+      display: inline-block;
+      transform:
+        translate3d(var(--marquee-x, 0px), -50%, 0);
+      transform-origin: center;
+      will-change: transform;
+      opacity: 1;
+    }
+
+    .project-marquee-char.is-space {
+      width: .25em;
+    }
+
+    .project-marquee-char.is-cjk {
+      margin-right: -0.08em;
+    }
+
+    .project-marquee-red-layer .project-marquee-char {
+      color: #fd0038;
+    }
+
+    .project-orb-star-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 5;
+      opacity: 0;
+      pointer-events: none;
+      overflow: hidden;
+      transition: opacity 420ms ease;
+    }
+
+    .projects-scene[data-project-shape="base"] .project-orb-star-layer {
+      opacity: 1;
+    }
+
+    .project-orb {
+      position: absolute;
+      left: 50%;
+      top: -8vh;
+      width: clamp(42px, 5vw, 82px);
+      height: clamp(42px, 5vw, 82px);
+      border-radius: 50%;
+      background: #fff;
+      transform: translate(-50%, -50%) scale(0.88);
+      animation: project-orb-drop 3150ms cubic-bezier(.42, 0, .18, 1) forwards;
+      will-change: transform, top, opacity;
+    }
+
+    .project-star {
+      position: absolute;
+      left: 50%;
+      top: 53%;
+      width: clamp(54px, 6.2vw, 102px);
+      height: clamp(54px, 6.2vw, 102px);
+      object-fit: contain;
+      transform: translate(-50%, -50%) scale(0.15);
+      filter:
+        drop-shadow(0 0 10px rgba(255, 255, 255, 0.86))
+        drop-shadow(0 0 28px rgba(255, 255, 255, 0.48));
+      animation: project-star-fall 3300ms cubic-bezier(.18, .72, .24, 1) forwards;
+      will-change: transform, top, opacity;
+    }
+
+    @keyframes project-orb-drop {
+      0% {
+        top: -8vh;
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.72);
+      }
+      14% {
+        opacity: 1;
+      }
+      78% {
+        top: 41.5%;
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+      }
+      100% {
+        top: 43.2%;
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.36);
+      }
+    }
+
+    @keyframes project-star-fall {
+      0% {
+        top: 53%;
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.12);
+      }
+      18% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.08);
+      }
+      72% {
+        opacity: 1;
+      }
+      100% {
+        top: 105%;
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.74);
+      }
+    }
+
+    .project-half {
+      transform-box: fill-box;
+      transform-origin: center;
+      transition: transform 720ms cubic-bezier(.18, 1, .22, 1);
+      shape-rendering: geometricPrecision;
+      vector-effect: non-scaling-stroke;
+    }
+
+    .projects-scene.project-fast-quiet .project-half {
+      transition-duration: 360ms;
+      transition-timing-function: cubic-bezier(.32, .72, .18, 1);
+    }
+
+    .project-half path {
+      fill: currentColor;
+      shape-rendering: geometricPrecision;
+      transition: filter 260ms ease;
+    }
+
+    .projects-scene[data-project-shape="base"] .project-half.is-glowing path {
+      filter:
+        drop-shadow(0 0 6px rgba(255, 255, 255, 0.36))
+        drop-shadow(0 0 14px rgba(255, 255, 255, 0.24));
+    }
+
+    .projects-scene[data-project-shape="quiet"] .project-half-top {
+      transform: translateY(-361px) scale(4.9);
+    }
+
+    .projects-scene[data-project-shape="quiet"] .project-half-bottom {
+      transform: translateY(361px) scale(4.9);
+    }
+
+    .projects-scene[data-project-shape="motion"] .project-half-top {
+      transform: translate(calc(-358px - var(--motion-breath, 0px)), 92.5px) rotate(-90deg) scale(3.82);
+    }
+
+    .projects-scene[data-project-shape="motion"] .project-half-bottom {
+      transform: translate(calc(358px + var(--motion-breath, 0px)), -92.5px) rotate(-90deg) scale(3.82);
+    }
+
+    .projects-scene[data-project-shape="fun"] .project-half-top {
+      transform: translateY(181px);
+    }
+
+    .projects-scene[data-project-shape="fun"] .project-half-bottom {
+      transform: translateY(-180px);
+    }
+
+    .projects-scene[data-project-shape="depth"] .project-half-top {
+      transform: translateY(-310px) scale(2.55);
+    }
+
+    .projects-scene[data-project-shape="depth"] .project-half-bottom {
+      transform: translateY(620px) scale(4.9);
+    }
+
+    .project-fun-eyes {
+      position: absolute;
+      inset: 0;
+      z-index: 4;
+      width: 100%;
+      height: 100%;
+      color: #fd0038;
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(0.08);
+      transform-origin: center;
+      transition: opacity 170ms ease, transform 170ms cubic-bezier(.2, .9, .2, 1);
+    }
+
+    .projects-scene[data-project-shape="fun"] .project-fun-eyes {
+      opacity: 1;
+      transform: scale(1);
+      transition-duration: 420ms;
+      transition-timing-function: cubic-bezier(.18, 1.16, .18, 1);
+    }
+
+    .projects-scene[data-project-shape="depth"] .project-fun-eyes {
+      opacity: 1;
+      transform: translateY(-43vh) scale(0.82);
+      transition-duration: 260ms;
+      transition-timing-function: cubic-bezier(.18, .86, .24, 1);
+    }
+
+    .project-eye-ring {
+      fill: #fff;
+      stroke: currentColor;
+      stroke-width: 8;
+    }
+
+    .project-eye-bridge {
+      fill: currentColor;
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+
+    .project-eye-ring {
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+
+    .project-eye-pupil {
+      fill: currentColor;
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+
+    .project-earth-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 4;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 260ms ease;
+    }
+
+    .projects-scene[data-project-shape="depth"] .project-earth-layer {
+      opacity: 1;
+    }
+
+    .project-state-copy-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 6;
+      pointer-events: none;
+      font-family: "HYMacH7", "PingFang TC", "PingFang SC", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: 0;
+    }
+
+    .project-state-copy {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transform: translate3d(0, 22px, 0) scale(0.985);
+      transition:
+        opacity 520ms cubic-bezier(.22, .74, .16, 1),
+        transform 720ms cubic-bezier(.18, 1, .22, 1);
+      will-change: opacity, transform;
+    }
+
+    .projects-scene[data-project-shape="quiet"] .project-copy-quiet,
+    .projects-scene[data-project-shape="motion"] .project-copy-motion,
+    .projects-scene[data-project-shape="fun"] .project-copy-fun,
+    .projects-scene[data-project-shape="depth"] .project-copy-depth {
+      opacity: 1;
+      transform: translate3d(0, 0, 0) scale(1);
+      transition-delay: 120ms;
+    }
+
+    .project-copy-line {
+      position: absolute;
+      margin: 0;
+      white-space: nowrap;
+      line-height: .82;
+      transform: translate3d(var(--copy-x, 0), var(--copy-y, 0), 0);
+      transition:
+        transform 780ms cubic-bezier(.16, 1, .22, 1),
+        opacity 520ms cubic-bezier(.22, .74, .16, 1);
+      transition-delay: var(--copy-delay, 0ms);
+    }
+
+    .project-copy-quiet {
+      color: #fd0038;
+      font-family: "AaGuXian", "PingFang TC", "PingFang SC", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-weight: 400;
+      text-align: center;
+    }
+
+    .project-copy-quiet .quiet-title {
+      left: 50%;
+      top: 12.2%;
+      font-size: clamp(44px, 5.4vw, 76px);
+      font-weight: 400;
+      writing-mode: vertical-rl;
+      line-height: .82;
+      --copy-x: -50%;
+      --copy-y: -18px;
+    }
+
+    .project-copy-quiet .quiet-en {
+      left: 50%;
+      top: 23.6%;
+      font-size: clamp(36px, 4.2vw, 58px);
+      font-weight: 400;
+      --copy-x: -50%;
+      --copy-y: -12px;
+    }
+
+    .project-copy-quiet .quiet-sub {
+      left: 50%;
+      top: 74.6%;
+      font-size: clamp(42px, 5.2vw, 72px);
+      font-weight: 400;
+      --copy-x: -50%;
+      --copy-y: 18px;
+    }
+
+    .projects-scene[data-project-shape="quiet"] .project-copy-quiet .project-copy-line,
+    .projects-scene[data-project-shape="motion"] .project-copy-motion .project-copy-line,
+    .projects-scene[data-project-shape="fun"] .project-copy-fun .project-copy-line,
+    .projects-scene[data-project-shape="depth"] .project-copy-depth .project-copy-line {
+      transform: translate3d(var(--copy-x, 0), 0, 0);
+    }
+
+    .project-copy-motion {
+      color: #fd0038;
+      font-weight: 850;
+    }
+
+    .project-copy-motion .motion-left {
+      left: 7.4%;
+      top: 47.4%;
+      font-size: clamp(42px, 6.4vw, 92px);
+      --copy-x: 0;
+      --copy-y: 26px;
+    }
+
+    .project-copy-motion .motion-right-top {
+      right: 25.2%;
+      top: 40.9%;
+      font-size: clamp(36px, 5.4vw, 78px);
+      text-align: right;
+      --copy-x: 0;
+      --copy-y: -22px;
+    }
+
+    .project-copy-motion .motion-right-bottom {
+      right: 7.1%;
+      top: 53.8%;
+      font-size: clamp(40px, 5.9vw, 86px);
+      text-align: right;
+      --copy-x: 0;
+      --copy-y: 22px;
+    }
+
+    .project-copy-fun {
+      color: #fff;
+      font-weight: 850;
+    }
+
+    .project-copy-fun .fun-left {
+      left: 7.2%;
+      top: 48.2%;
+      font-size: clamp(42px, 6.1vw, 88px);
+      --copy-y: 18px;
+    }
+
+    .project-copy-fun .fun-right {
+      right: 6.8%;
+      top: 48.4%;
+      font-size: clamp(40px, 5.9vw, 86px);
+      --copy-y: -18px;
+    }
+
+    .project-copy-depth {
+      color: #fff;
+      font-weight: 850;
+      text-align: center;
+    }
+
+    .project-copy-depth .depth-title {
+      left: 50%;
+      top: 28.5%;
+      font-size: clamp(42px, 6vw, 86px);
+      --copy-x: -50%;
+      --copy-y: 20px;
+    }
+
+    @media (max-width: 760px) {
+      .project-copy-motion .motion-left {
+        left: 5.8%;
+        font-size: clamp(42px, 12vw, 72px);
+      }
+
+      .project-copy-motion .motion-right-top {
+        right: 14%;
+        font-size: clamp(36px, 10vw, 62px);
+      }
+
+      .project-copy-motion .motion-right-bottom {
+        right: 5.8%;
+        font-size: clamp(40px, 11vw, 68px);
+      }
+
+      .project-copy-fun .fun-left,
+      .project-copy-fun .fun-right {
+        font-size: clamp(34px, 11vw, 66px);
+      }
+
+      .project-copy-depth .depth-title {
+        top: 31%;
+        font-size: clamp(34px, 10vw, 62px);
+      }
+    }
+
+    .project-earth-window {
+      position: absolute;
+      left: 50%;
+      top: 92%;
+      width: 108vw;
+      height: 54vw;
+      transform: translate(-50%, -50%);
+      overflow: hidden;
+      background: #fff;
+      border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+      clip-path: ellipse(50% 100% at 50% 100%);
+    }
+
+    .project-earth-strip {
+      display: flex;
+      width: max-content;
+      height: 100%;
+      animation: project-earth-scroll 16s linear infinite;
+      will-change: transform;
+    }
+
+    .project-earth-strip img {
+      display: block;
+      width: 108vw;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      flex: 0 0 auto;
+    }
+
+    @keyframes project-earth-scroll {
+      from {
+        transform: translateX(0);
+      }
+      to {
+        transform: translateX(-50%);
+      }
+    }
+
+    .project-list-scene {
+      position: fixed;
+      inset: 0;
+      z-index: 42;
+      min-height: 100dvh;
+      overflow: hidden;
+      background: transparent;
+      opacity: var(--project-list-opacity);
+      pointer-events: none;
+      transform: translate3d(0, var(--project-list-y), 0);
+      will-change: opacity, transform;
+    }
+
+    body.project-list-ready .project-list-scene {
+      pointer-events: auto;
+    }
+
+    .project-list-white-orb {
+      position: absolute;
+      z-index: 0;
+      left: 50%;
+      bottom: -72vmax;
+      width: 136vmax;
+      height: 136vmax;
+      border-radius: 50%;
+      background: #fff;
+      transform: translateX(-50%) scale(var(--project-list-orb-scale));
+      transform-origin: 50% 100%;
+      will-change: transform;
+    }
+
+    .project-list-stage {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      font-family: "HYMacH7", "PingFang TC", "PingFang SC", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: 0;
+      transform-origin: center;
+      opacity: 1;
+    }
+
+    .project-list-layer {
+      position: absolute;
+      inset: 0;
+      transition: opacity 620ms cubic-bezier(.22, .74, .16, 1);
+      will-change: opacity;
+    }
+
+    .project-list-base {
+      opacity: var(--project-list-base-opacity);
+    }
+
+    .project-list-final {
+      opacity: var(--project-list-final-opacity);
+    }
+
+    body.project-list-color-replay .project-list-base {
+      animation: projectListBaseReplay 1540ms cubic-bezier(.18, .78, .2, 1) both;
+    }
+
+    body.project-list-color-replay .project-list-final {
+      animation: projectListFinalReplay 1540ms cubic-bezier(.18, .78, .2, 1) both;
+    }
+
+    @keyframes projectListBaseReplay {
+      0%,
+      56% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+      }
+    }
+
+    @keyframes projectListFinalReplay {
+      0%,
+      56% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+
+    .project-list-item {
+      position: absolute;
+      left: var(--pl-left);
+      top: var(--pl-top);
+      margin: 0;
+      line-height: 1.1;
+      white-space: nowrap;
+      text-align: center;
+      transform: translate(-50%, calc(-50% + 28px)) scale(0.985);
+      opacity: 0;
+      transition:
+        opacity 520ms cubic-bezier(.22, .74, .16, 1),
+        transform 760ms cubic-bezier(.16, 1, .22, 1);
+      transition-delay: var(--pl-delay, 0ms);
+      will-change: opacity, transform;
+    }
+
+    body.project-list-ready .project-list-item {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    .project-list-sun,
+    .project-list-ximu {
+      font-size: clamp(72px, 10vw, 128px);
+      font-weight: 850;
+    }
+
+    .project-list-sun {
+      --pl-left: 49.8%;
+      --pl-top: 15.8%;
+      --pl-delay: 90ms;
+    }
+
+    .project-list-ximu {
+      --pl-left: 49.8%;
+      --pl-top: 35.2%;
+      --pl-delay: 240ms;
+    }
+
+    .project-list-mark {
+      --pl-left: 51%;
+      --pl-top: 50.9%;
+      --pl-delay: 390ms;
+      width: clamp(260px, 36.6vw, 468px);
+      height: auto;
+      transform-origin: center;
+      z-index: 2;
+    }
+
+    .project-list-title {
+      --pl-left: 51.1%;
+      --pl-top: 68.6%;
+      --pl-delay: 560ms;
+      font-size: clamp(148px, 20vw, 256px);
+      font-weight: 850;
+      letter-spacing: 0;
+      line-height: .92;
+      z-index: 3;
+    }
+
+    .project-list-base .project-list-sun,
+    .project-list-base .project-list-ximu {
+      color: #000;
+    }
+
+    .project-list-base .project-list-title {
+      color: #fd0038;
+    }
+
+    .project-list-base .project-list-mark {
+      filter: brightness(0) saturate(100%) invert(18%) sepia(95%) saturate(4307%) hue-rotate(340deg) brightness(101%) contrast(94%);
+    }
+
+    .project-list-final .project-list-sun,
+    .project-list-final .project-list-ximu {
+      color: #f6f6f6;
+    }
+
+    .project-list-final .project-list-mark {
+      filter: brightness(0) saturate(100%) invert(93%) sepia(12%) saturate(1813%) hue-rotate(297deg) brightness(103%) contrast(104%);
+      opacity: .72;
+    }
+
+    .project-list-final .project-list-title {
+      color: transparent;
+      -webkit-text-stroke: clamp(1px, .28vw, 3.5px) rgba(253, 0, 56, 0.1);
+      text-stroke: clamp(1px, .28vw, 3.5px) rgba(253, 0, 56, 0.1);
+    }
+
+    @media (max-width: 760px) {
+      .project-list-sun,
+      .project-list-ximu {
+        font-size: clamp(58px, 18vw, 104px);
+      }
+
+      .project-list-mark {
+        width: min(68vw, 360px);
+      }
+
+      .project-list-title {
+        font-size: clamp(96px, 27vw, 172px);
+      }
+    }
+
+    .information-panel {
+      position: absolute;
+      inset: 0;
+      background: #fd0038;
+      overflow: hidden;
+    }
+
+    .information-portrait-frame {
+      position: absolute;
+      left: 36.6%;
+      top: 10.5%;
+      width: 26.7%;
+      height: 78.8%;
+      z-index: 2;
+      opacity: 0.5;
+      transform: scale(1);
+      transform-origin: center;
+      overflow: visible;
+      transition: opacity 220ms ease, transform 220ms cubic-bezier(.2, .8, .2, 1), box-shadow 220ms ease, z-index 0ms linear 220ms;
+    }
+
+    .information-portrait-frame:hover {
+      z-index: 5;
+      opacity: 1;
+      transform: scale(1.035);
+      box-shadow: 0 18px 38px rgba(0, 0, 0, 0.24);
+      transition: opacity 220ms ease, transform 220ms cubic-bezier(.2, .8, .2, 1), box-shadow 220ms ease, z-index 0ms;
+    }
+
+    .information-portrait {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 82%;
+      pointer-events: none;
+    }
+
+    .portrait-face-hotspot {
+      position: absolute;
+      left: 13%;
+      top: 24%;
+      width: 38%;
+      height: 25%;
+      z-index: 2;
+      background: transparent;
+    }
+
+    .information-menu {
+      position: absolute;
+      left: 6.2%;
+      top: 28.6%;
+      z-index: 3;
+      display: grid;
+      gap: clamp(22px, 4.9vh, 43px);
+      width: 32%;
+      color: #fff;
+      font-family: "PingFang TC", "PingFang SC", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: clamp(48px, 4.9vw, 68px);
+      font-weight: 600;
+      line-height: 1.05;
+      letter-spacing: 0;
+      justify-items: end;
+      text-align: right;
+    }
+
+    .information-menu-invert {
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      padding-left: 6.2%;
+      padding-top: 28.6%;
+      grid-template-columns: 32%;
+      align-content: start;
+      box-sizing: border-box;
+      z-index: 6;
+      pointer-events: none;
+      mix-blend-mode: difference;
+      clip-path: inset(10.5% 36.7% 10.7% 36.6%);
+    }
+
+    .information-menu a {
+      display: block;
+      color: inherit;
+      text-decoration: none;
+      white-space: nowrap;
+      text-align: right;
+      opacity: 0;
+      transform: translateX(calc(var(--item-x, 0px) - 76px)) scale(0.985);
+      transform-origin: right center;
+      transition: opacity 520ms ease, transform 680ms cubic-bezier(.16, 1, .3, 1), color 220ms ease;
+      transition-delay: calc(var(--menu-i, 0) * 70ms);
+    }
+
+    .information-menu-invert a {
+      color: #fff;
+      opacity: 0;
+    }
+
+    .information-menu a {
+      --item-x: 0;
+    }
+
+    .information-menu a:nth-child(1) {
+      --menu-i: 0;
+    }
+
+    .information-menu a:nth-child(2) {
+      --menu-i: 1;
+    }
+
+    .information-menu a:nth-child(3) {
+      --menu-i: 2;
+    }
+
+    .information-menu a:nth-child(4) {
+      --menu-i: 3;
+    }
+
+    body.information-ready .information-menu:not(.information-menu-invert) a {
+      opacity: 1;
+      transform: translateX(var(--item-x, 0)) scale(1);
+    }
+
+    .information-menu a:hover {
+      color: #000;
+      transform: translateX(var(--item-x, 0)) scale(1.035);
+      transition-delay: 0ms;
+    }
+
+    .information-menu:has(a:nth-child(1):hover) + .information-menu-invert a:nth-child(1),
+    .information-menu:has(a:nth-child(2):hover) + .information-menu-invert a:nth-child(2),
+    .information-menu:has(a:nth-child(3):hover) + .information-menu-invert a:nth-child(3),
+    .information-menu:has(a:nth-child(4):hover) + .information-menu-invert a:nth-child(4) {
+      opacity: 1;
+      transform: translateX(var(--item-x, 0)) scale(1.035);
+    }
+
+    .information-detail {
+      position: absolute;
+      left: 0;
+      top: 0;
+      z-index: 4;
+      width: 100%;
+      height: 100%;
+      color: #fff;
+      font-family: "PingFang TC", "PingFang SC", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      pointer-events: none;
+    }
+
+    .information-panel[data-active-info] .information-detail {
+      pointer-events: none;
+    }
+
+    .info-panel {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transform: translate3d(34px, 0, 0) scale(0.985);
+      filter: blur(10px);
+      transition: opacity 340ms ease, transform 420ms cubic-bezier(.16, 1, .3, 1), filter 360ms ease;
+      will-change: opacity, transform, filter;
+    }
+
+    .information-panel[data-active-info="information"] .info-panel-information,
+    .information-panel[data-active-info="skills"] .info-panel-skills,
+    .information-panel[data-active-info="philosophy"] .info-panel-philosophy,
+    .information-panel[data-active-info="recognition"] .info-panel-recognition {
+      opacity: 1;
+      transform: translate3d(0, 0, 0) scale(1);
+      filter: blur(0);
+    }
+
+    .figma-node {
+      position: absolute;
+      left: var(--x);
+      top: var(--y);
+      z-index: 1;
+      display: block;
+      margin: 0;
+      color: #fff;
+      font-weight: 600;
+      line-height: 1.22;
+      white-space: nowrap;
+      opacity: 0;
+      transform: translate3d(var(--hidden-x, 18px), 10px, 0);
+      transition: opacity 280ms ease, transform 460ms cubic-bezier(.16, 1, .3, 1);
+      transition-delay: var(--d, 0ms);
+      will-change: transform, opacity;
+      pointer-events: none;
+    }
+
+    .figma-en {
+      --hidden-x: calc(-100% + 18px);
+      --active-x: -100%;
+      text-align: right;
+    }
+
+    .figma-cn {
+      --hidden-x: 18px;
+      --active-x: 0;
+      text-align: left;
+    }
+
+    .information-panel[data-active-info="information"] .info-panel-information .figma-node,
+    .information-panel[data-active-info="philosophy"] .info-panel-philosophy .figma-node,
+    .information-panel[data-active-info="recognition"] .info-panel-recognition .figma-node {
+      opacity: 1;
+      transform: translate3d(var(--active-x, 0), 0, 0);
+    }
+
+    .figma-fs-32 {
+      font-size: clamp(24px, 2.5vw, 32px);
+    }
+
+    .figma-fs-24 {
+      font-size: clamp(18px, 1.875vw, 24px);
+    }
+
+    .figma-fs-20 {
+      font-size: clamp(15px, 1.5625vw, 20px);
+    }
+
+    .figma-fs-16 {
+      font-size: clamp(12px, 1.25vw, 16px);
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: minmax(92px, .92fr) minmax(150px, 1.08fr);
+      column-gap: 15px;
+      row-gap: clamp(24px, 5.1vh, 54px);
+      align-items: start;
+      padding-top: clamp(10px, 2.2vh, 28px);
+      font-weight: 600;
+      line-height: 1.08;
+    }
+
+    .info-pair {
+      display: contents;
+    }
+
+    .info-pair > strong,
+    .info-pair > span {
+      display: block;
+      opacity: 0;
+      transform: translate3d(16px, 12px, 0);
+      transition: opacity 300ms ease, transform 420ms cubic-bezier(.16, 1, .3, 1);
+      transition-delay: calc(var(--row, 0) * 70ms);
+    }
+
+    .info-detail-target {
+      transform-origin: center;
+      transition-property: opacity, transform, filter, color;
+    }
+
+    .information-panel[data-active-info="information"] .info-pair > strong,
+    .information-panel[data-active-info="information"] .info-pair > span {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+
+    .info-pair > strong {
+      text-align: right;
+      font-size: clamp(18px, 2.35vw, 32px);
+      white-space: nowrap;
+    }
+
+    .info-pair > span {
+      font-size: clamp(16px, 2vw, 28px);
+      white-space: nowrap;
+    }
+
+    .info-small > strong {
+      font-size: clamp(14px, 1.6vw, 20px);
+    }
+
+    .info-small > span {
+      font-size: clamp(14px, 1.55vw, 20px);
+    }
+
+    .info-sub {
+      margin-top: 5px;
+      font-size: clamp(12px, 1.25vw, 16px);
+      line-height: 1.2;
+    }
+
+    .skills-grid {
+      position: absolute;
+      inset: 0;
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .skill-chip {
+      position: absolute;
+      left: var(--x);
+      top: var(--y);
+      display: grid;
+      place-items: center;
+      width: clamp(50px, 5vw, 64px);
+      height: clamp(50px, 5vw, 64px);
+      border-radius: 50%;
+      background: #fff;
+      opacity: 0;
+      transform: translate3d(18px, 22px, 0) scale(0.45) rotate(-8deg);
+      filter: blur(8px);
+      box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+      transition: opacity 180ms ease, transform 520ms cubic-bezier(.18, 1.25, .28, 1), filter 420ms ease, box-shadow 260ms ease;
+      transition-delay: calc(var(--i, 0) * 28ms);
+      will-change: transform, opacity, filter;
+      pointer-events: none;
+    }
+
+    .information-panel[data-active-info="skills"] .skill-chip {
+      opacity: 1;
+      transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
+      filter: blur(0);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+    }
+
+    .skill-chip:hover {
+      transform: translate3d(0, -3px, 0) scale(1.08) rotate(0deg);
+      box-shadow: 0 16px 30px rgba(0, 0, 0, 0.16);
+    }
+
+    .skill-chip img {
+      display: block;
+      width: calc(100% * var(--icon-scale, .75));
+      height: calc(100% * var(--icon-scale, .75));
+      object-fit: contain;
+      pointer-events: none;
+    }
+
+    .philosophy-panel {
+      padding: 0;
+    }
+
+    .figma-copy {
+      width: min(30.6vw, 392px);
+      white-space: pre-wrap;
+      line-height: 1.35;
+      text-align: justify;
+    }
+
+    .figma-copy-title {
+      line-height: 1.15;
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    .philosophy-copy {
+      width: min(30.6vw, 392px);
+      white-space: normal;
+      line-height: 1.35;
+      text-align: left;
+    }
+
+    .philosophy-copy p {
+      margin: 0 0 10px;
+      text-indent: 1.45em;
+    }
+
+    .philosophy-copy p:last-child {
+      margin-bottom: 0;
+    }
+
+    .philosophy-copy-en {
+      line-height: 1.32;
+    }
+
+    .recognition-list {
+      position: absolute;
+      inset: 0;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .recognition-list li {
+      position: absolute;
+      left: 65.625%;
+      top: var(--y);
+      opacity: 0;
+      transform: translate3d(24px, 10px, 0);
+      font-size: clamp(18px, 2.35vw, 32px);
+      font-weight: 600;
+      line-height: 1.1;
+      white-space: nowrap;
+      transition: opacity 280ms ease, transform 420ms cubic-bezier(.16, 1, .3, 1);
+      transition-delay: calc(var(--i, 0) * 44ms);
+      pointer-events: none;
+    }
+
+    .recognition-list li:nth-child(n + 3) {
+      font-size: clamp(15px, 1.9vw, 24px);
+    }
+
+    .information-panel[data-active-info="recognition"] .recognition-list li {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+
+    .recognition-cn,
+    .recognition-en {
+      display: block;
+      pointer-events: none;
+    }
+
+    .recognition-en {
+      margin-top: 5px;
+      font-size: clamp(10px, 1.18vw, 15px);
+      line-height: 1.18;
+      white-space: nowrap;
+    }
+
+    .recognition-list li:nth-child(n + 3) .recognition-en {
+      margin-top: 3px;
+      font-size: clamp(9px, 1.02vw, 13px);
+    }
+
+
+    .identity-logo {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      z-index: 1;
+      width: min(84%, 700px);
+      height: auto;
+      filter: brightness(0) invert(1);
+      transform: translate(-50%, -50%);
+      transform-origin: center;
+      pointer-events: none;
+    }
+
+    .identity-name {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      color: #000;
+      font-size: clamp(118px, 16.8vw, 246px);
+      font-family: "HYMacH7", Impact, Haettenschweiler, "Arial Narrow", "Arial Black", sans-serif;
+      font-weight: 850;
+      line-height: 0.78;
+      letter-spacing: 0;
+    }
+
+    .name-part {
+      position: relative;
+      display: inline-grid;
+      place-items: center;
+      color: #000;
+      cursor: pointer;
+      transform: translate(var(--x), var(--y)) scale(1);
+      transform-origin: center;
+      transition: color 220ms ease, transform 240ms cubic-bezier(.2, .8, .2, 1);
+    }
+
+    .name-part::after {
+      content: attr(data-flash);
+      position: absolute;
+      inset: auto;
+      z-index: 3;
+      color: transparent;
+      -webkit-text-stroke: 2px #fff;
+      text-stroke: 2px #fff;
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(0.92);
+      font-family: "HYMacH7", Impact, Haettenschweiler, "Arial Narrow", "Arial Black", sans-serif;
+      font-weight: 850;
+    }
+
+    .name-part:hover::after {
+      animation: outlineFlash 240ms steps(3, end) both;
+    }
+
+    .name-mu:hover::after {
+      animation-name: outlineFlashMu;
+    }
+
+    .name-sun {
+      position: absolute;
+      top: -4%;
+      left: 50%;
+      --x: -50%;
+      --y: 0;
+      font-size: 0.96em;
+    }
+
+    .name-xi {
+      position: absolute;
+      top: 52%;
+      left: 26.5%;
+      --x: -50%;
+      --y: 0;
+      font-size: 1em;
+    }
+
+    .name-mu {
+      position: absolute;
+      top: 52%;
+      left: 63.5%;
+      --x: -50%;
+      --y: 0;
+      font-size: 1em;
+    }
+
+    .name-part .latin,
+    .name-part .han {
+      grid-area: 1 / 1;
+      transition: none;
+    }
+
+    .name-part .latin {
+      font-family: "HYMacH7", Impact, Haettenschweiler, "Arial Narrow", "Arial Black", sans-serif;
+      font-weight: 850;
+      transform: none;
+      transform-origin: center;
+    }
+
+    .name-part .han {
+      opacity: 0;
+      color: #000;
+      font-family: "HYMacH7", "Songti SC", "STSong", "SimSun", serif;
+      font-weight: 850;
+      transform: translateX(0.04em) scale(1);
+    }
+
+    .name-part:hover {
+      color: #000;
+      transform: translate(var(--x), var(--y)) scale(1.015);
+    }
+
+    .name-part:hover .latin {
+      animation: latinScramble 320ms steps(5, end) both;
+    }
+
+    .name-part:hover .han {
+      opacity: 1;
+      transform: translateX(0) scale(1);
+      animation: hanPop 320ms steps(4, end) both;
+    }
+
+    .name-mu:hover .han {
+      animation-name: hanPopMu;
+    }
+
+    @keyframes latinScramble {
+      0% {
+        opacity: 1;
+        transform: translate(0, 0) scale(1);
+      }
+      22% {
+        opacity: 1;
+        transform: translate(-0.06em, 0.03em) scale(1.22, 0.74);
+      }
+      45% {
+        opacity: 1;
+        transform: translate(0.09em, -0.05em) scale(0.68, 1.3);
+      }
+      68% {
+        opacity: 0.55;
+        transform: translate(-0.12em, 0.03em) scale(1.1, 0.9);
+      }
+      100% {
+        opacity: 0;
+        transform: translateX(-0.18em) scale(0.9);
+      }
+    }
+
+    @keyframes hanPop {
+      0% {
+        opacity: 0;
+        transform: translate(0.06em, -0.02em) scale(0.86);
+      }
+      38% {
+        opacity: 0;
+        transform: translate(-0.04em, 0.02em) scale(1.08, 0.9);
+      }
+      58% {
+        opacity: 1;
+        transform: translate(0.03em, -0.01em) scale(0.94, 1.08);
+      }
+      76% {
+        opacity: 1;
+        transform: translate(-0.01em, 0.01em) scale(1.03);
+      }
+      100% {
+        opacity: 1;
+        transform: translate(0, 0) scale(1);
+      }
+    }
+
+    @keyframes hanPopMu {
+      0% {
+        opacity: 0;
+        transform: translate(0.2em, -0.02em) scale(0.86);
+      }
+      38% {
+        opacity: 0;
+        transform: translate(0.12em, 0.02em) scale(1.08, 0.9);
+      }
+      58% {
+        opacity: 1;
+        transform: translate(0.18em, -0.01em) scale(0.94, 1.08);
+      }
+      76% {
+        opacity: 1;
+        transform: translate(0.15em, 0.01em) scale(1.03);
+      }
+      100% {
+        opacity: 1;
+        transform: translate(0.16em, 0) scale(1);
+      }
+    }
+
+    @keyframes outlineFlash {
+      0% {
+        opacity: 0;
+        transform: translate(-0.04em, 0.02em) scale(0.88);
+      }
+      18% {
+        opacity: 1;
+        transform: translate(0.04em, -0.02em) scale(1.08, 0.88);
+      }
+      42% {
+        opacity: 0.85;
+        transform: translate(-0.02em, 0.03em) scale(0.96, 1.16);
+      }
+      72% {
+        opacity: 0.35;
+        transform: translate(0.03em, 0) scale(1.04);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(0, 0) scale(1);
+      }
+    }
+
+    @keyframes outlineFlashMu {
+      0% {
+        opacity: 0;
+        transform: translate(0.12em, 0.02em) scale(0.88);
+      }
+      18% {
+        opacity: 1;
+        transform: translate(0.2em, -0.02em) scale(1.08, 0.88);
+      }
+      42% {
+        opacity: 0.85;
+        transform: translate(0.14em, 0.03em) scale(0.96, 1.16);
+      }
+      72% {
+        opacity: 0.35;
+        transform: translate(0.19em, 0) scale(1.04);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(0.16em, 0) scale(1);
+      }
+    }
+
+    @media (max-aspect-ratio: 3/4) {
+      .site-logo {
+        width: var(--logo-width);
+      }
+
+      .mascot-svg {
+        width: min(74vw, 46vh);
+        height: min(74vw, 46vh);
+      }
+
+      .nav-links {
+        top: 28px;
+        right: 18px;
+        gap: 12px;
+      }
+
+      .logo-hover-menu {
+        top: calc(var(--logo-top) + var(--logo-width) * 0.6 + 14px);
+        gap: 12px;
+      }
+
+      .nav-links a,
+      .logo-hover-menu a {
+        font-size: 11px;
+      }
+
+      .identity-name {
+        font-size: clamp(86px, 26vw, 138px);
+      }
+
+      .identity-content {
+        width: min(92vw, 440px);
+        height: min(72vh, 560px);
+        min-height: 430px;
+      }
+
+      .identity-logo {
+        width: 88%;
+      }
+
+      .peek-mascot {
+        top: 15vh;
+        right: -205px;
+        width: 425px;
+        opacity: max(calc(var(--identity-opacity) * 0.82), calc(var(--information-opacity) * 0.9));
+      }
+
+      .name-sun {
+        top: 7%;
+        left: 50%;
+      }
+
+      .name-xi {
+        top: 56%;
+        left: 27%;
+      }
+
+      .name-mu {
+        top: 56%;
+        left: 66%;
+      }
+
+      .information-panel {
+        inset: 0;
+      }
+
+      .information-portrait-frame {
+        left: 38%;
+        top: 13%;
+        width: 51%;
+        height: 74%;
+      }
+
+      .information-portrait {
+        object-position: 47% top;
+      }
+
+      .portrait-face-hotspot {
+        left: 8%;
+        top: 23%;
+        width: 42%;
+        height: 24%;
+      }
+
+      .information-menu {
+        left: 3%;
+        top: 31%;
+        width: 62%;
+        gap: clamp(22px, 4.2vh, 32px);
+        font-size: clamp(38px, 12.5vw, 58px);
+      }
+
+      .information-menu-invert {
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        padding-left: 3%;
+        padding-top: 31%;
+        grid-template-columns: 62%;
+        clip-path: inset(13% 11% 13% 38%);
+      }
+
+      .information-detail {
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      .info-grid {
+        grid-template-columns: 1fr;
+        row-gap: 14px;
+        padding-top: 8vh;
+      }
+
+      .info-pair,
+      .info-pair strong,
+      .info-pair > span {
+        display: block;
+        text-align: left;
+      }
+
+      .info-pair span {
+        margin-top: 4px;
+      }
+
+      .skills-grid {
+        display: block;
+      }
+
+      .skill-chip {
+        width: clamp(34px, 8vw, 48px);
+        height: clamp(34px, 8vw, 48px);
+      }
+
+      .figma-fs-32 {
+        font-size: clamp(16px, 5vw, 25px);
+      }
+
+      .figma-fs-24 {
+        font-size: clamp(13px, 4vw, 18px);
+      }
+
+      .figma-fs-20 {
+        font-size: clamp(11px, 3.35vw, 15px);
+      }
+
+      .figma-fs-16 {
+        font-size: clamp(9px, 2.9vw, 12px);
+      }
+
+      .figma-copy {
+        width: 31vw;
+        line-height: 1.28;
+      }
+
+      .recognition-list li,
+      .recognition-list li:nth-child(n + 3) {
+        font-size: clamp(12px, 3.4vw, 17px);
+        white-space: normal;
+      }
+
+      .information-menu a:nth-child(1) {
+        --item-x: 0;
+      }
+
+      .information-menu a:nth-child(2) {
+        --item-x: 0;
+      }
+
+      .information-menu a:nth-child(3) {
+        --item-x: 0;
+      }
+
+      .information-menu a:nth-child(4) {
+        --item-x: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <img class="site-logo" src="网站素材/孙熙穆logo.svg" alt="孙熙穆 logo" data-cursor-target>
+  <nav class="logo-hover-menu" aria-label="首页 logo 导航">
+    <a href="#identity" data-cursor-target>WHO am i</a>
+    <a href="#project-list" data-cursor-target>Projects</a>
+    <a href="#contact" data-cursor-target>Contact</a>
+  </nav>
+  <nav class="nav-links" aria-label="主导航">
+    <a href="#identity" data-cursor-target>WHO am i</a>
+    <a href="#project-list" data-cursor-target>Projects</a>
+    <a href="#contact" data-cursor-target>Contact</a>
+  </nav>
+
+  <!-- 零HUD交互式触控舞台 -->
+  <div id="sandbox-container">
+    
+    <!-- 网格背景 -->
+    <div id="grid"></div>
+
+    <!-- 叠在中间的交互式吉祥物 (触控穿透) -->
+    <div class="mascot-wrapper">
+      <svg class="mascot-svg" viewBox="-250 -250 500 500">
+        <g id="mascot-group">
+          
+          <!-- 上半身圆轮廓 -->
+          <path id="shape-top" d="M -145,-6 C -148,-6 -150,-10 -150,-15 A 150,150 0 0,1 150,-15 C 150,-10 148,-6 145,-6 Z" fill="#e81840" stroke="#ffffff" stroke-width="8" stroke-linejoin="round" />
+          
+          <!-- 下半身圆轮廓 -->
+          <path id="shape-bottom" d="M -145,6 C -148,6 -150,10 -150,15 A 150,150 0 0,0 150,15 C 150,10 148,6 145,6 Z" fill="#e81840" stroke="#ffffff" stroke-width="8" stroke-linejoin="round" />
+
+          <!-- 眼镜瞳孔视差层 -->
+          <g id="eyes-group">
+            
+            <!-- 左眼 -->
+            <g id="eye-left" transform="translate(-48, 0)">
+              <defs>
+                <clipPath id="left-clip">
+                  <circle cx="0" cy="0" r="41" />
+                </clipPath>
+              </defs>
+              <circle cx="0" cy="0" r="41" fill="#ffffff" stroke="#ffffff" stroke-width="5" />
+              <circle id="pupil-left" cx="0" cy="0" r="18" clip-path="url(#left-clip)" fill="#e81840" />
+            </g>
+
+            <!-- 右眼 -->
+            <g id="eye-right" transform="translate(48, 0)">
+              <defs>
+                <clipPath id="right-clip">
+                  <circle cx="0" cy="0" r="41" />
+                </clipPath>
+              </defs>
+              <circle cx="0" cy="0" r="41" fill="#ffffff" stroke="#ffffff" stroke-width="5" />
+              <circle id="pupil-right" cx="0" cy="0" r="18" clip-path="url(#right-clip)" fill="#e81840" />
+            </g>
+
+          </g>
+        </g>
+      </svg>
+    </div>
+
+  </div>
+
+  <section class="identity-scene" id="identity" aria-label="sunximu identity">
+    <div class="identity-content">
+      <img class="identity-logo" src="网站素材/孙熙穆logo.svg" alt="孙熙穆 logo">
+      <h1 class="identity-name" aria-label="sunximu">
+        <span class="name-part name-sun" data-flash="太陽" aria-label="SuN / 孙">
+          <span class="latin">SuN</span>
+          <span class="han">孙</span>
+        </span>
+        <span class="name-part name-xi" data-flash="動" aria-label="Xi / 熙">
+          <span class="latin">Xi</span>
+          <span class="han">熙</span>
+        </span>
+        <span class="name-part name-mu" data-flash="静" aria-label="mU / 穆">
+          <span class="latin">mU</span>
+          <span class="han">穆</span>
+        </span>
+	      </h1>
+	    </div>
+  </section>
+
+	    <svg class="peek-mascot" viewBox="-250 -250 500 500" aria-hidden="true">
+      <g>
+        <path d="M -145,-6 C -148,-6 -150,-10 -150,-15 A 150,150 0 0,1 150,-15 C 150,-10 148,-6 145,-6 Z" fill="#e81840" stroke="#ffffff" stroke-width="8" stroke-linejoin="round" />
+        <path d="M -145,6 C -148,6 -150,10 -150,15 A 150,150 0 0,0 150,15 C 150,10 148,6 145,6 Z" fill="#e81840" stroke="#ffffff" stroke-width="8" stroke-linejoin="round" />
+        <g transform="translate(-48, 0)">
+          <g class="peek-eye">
+            <circle cx="0" cy="0" r="41" fill="#ffffff" stroke="#ffffff" stroke-width="5" />
+            <circle class="peek-pupil" cx="9" cy="-6" r="18" fill="#e81840" />
+          </g>
+        </g>
+        <g transform="translate(48, 0)">
+          <g class="peek-eye">
+            <circle cx="0" cy="0" r="41" fill="#ffffff" stroke="#ffffff" stroke-width="5" />
+            <circle class="peek-pupil" cx="9" cy="-6" r="18" fill="#e81840" />
+          </g>
+        </g>
+	      </g>
+		    </svg>
+  <div class="peek-wow" aria-hidden="true">WOW!</div>
+
+  <section class="information-scene" id="information" aria-label="who am i information">
+    <div class="information-panel">
+      <div class="information-portrait-frame">
+        <img class="information-portrait" src="网站素材/who-am-i-portrait.jpg" alt="孙熙穆 portrait">
+        <span class="portrait-face-hotspot magnetic-target" data-cursor-target aria-label="portrait face"></span>
+      </div>
+      <nav class="information-menu" aria-label="who am i sections">
+        <a class="magnetic-target" href="#information" data-info-trigger="information" data-cursor-target>Information</a>
+        <a class="magnetic-target" href="#information" data-info-trigger="skills" data-cursor-target>Skills</a>
+        <a class="magnetic-target" href="#information" data-info-trigger="philosophy" data-cursor-target>Philosophy</a>
+        <a class="magnetic-target" href="#information" data-info-trigger="recognition" data-cursor-target>Recognition</a>
+      </nav>
+      <nav class="information-menu information-menu-invert" aria-hidden="true">
+        <a href="#information" tabindex="-1">Information</a>
+        <a href="#information" tabindex="-1">Skills</a>
+        <a href="#information" tabindex="-1">Philosophy</a>
+        <a href="#information" tabindex="-1">Recognition</a>
+      </nav>
+      <div class="information-detail" aria-live="polite">
+        <section class="info-panel info-panel-information" aria-label="Information detail">
+          <p class="figma-node figma-en figma-fs-32 info-detail-target" style="--x: 81.5625%; --y: 33.173%; --d: 20ms">Ximu Sun</p>
+          <p class="figma-node figma-cn figma-fs-32 info-detail-target" style="--x: 82.7344%; --y: 33.173%; --d: 50ms">孙&nbsp;&nbsp;熙穆</p>
+          <p class="figma-node figma-en figma-fs-24 info-detail-target" style="--x: 81.5625%; --y: 38.582%; --d: 100ms">XJTU</p>
+          <p class="figma-node figma-cn figma-fs-24 info-detail-target" style="--x: 82.7344%; --y: 38.582%; --d: 130ms">西安交通大学</p>
+          <p class="figma-node figma-en figma-fs-20 info-detail-target" style="--x: 81.5625%; --y: 42.067%; --d: 150ms">VCD</p>
+          <p class="figma-node figma-cn figma-fs-20 info-detail-target" style="--x: 82.7344%; --y: 42.067%; --d: 180ms">视觉传达设计</p>
+          <p class="figma-node figma-en figma-fs-20 info-detail-target" style="--x: 81.5625%; --y: 55.048%; --d: 240ms">Designer</p>
+          <p class="figma-node figma-cn figma-fs-20 info-detail-target" style="--x: 82.7344%; --y: 55.048%; --d: 270ms">设计师</p>
+          <p class="figma-node figma-en figma-fs-16 info-detail-target" style="--x: 81.5625%; --y: 58.173%; --d: 300ms">Interaction/Visual/Graphic</p>
+          <p class="figma-node figma-cn figma-fs-16 info-detail-target" style="--x: 82.7344%; --y: 58.173%; --d: 330ms">视觉/交互/平面</p>
+          <p class="figma-node figma-en figma-fs-20 info-detail-target" style="--x: 81.5625%; --y: 61.298%; --d: 360ms">CHINA</p>
+          <p class="figma-node figma-cn figma-fs-20 info-detail-target" style="--x: 82.7344%; --y: 61.298%; --d: 390ms">中国</p>
+          <p class="figma-node figma-en figma-fs-16 info-detail-target" style="--x: 81.5625%; --y: 64.183%; --d: 420ms">Jiangsu/Shaanxi</p>
+          <p class="figma-node figma-cn figma-fs-16 info-detail-target" style="--x: 82.7344%; --y: 64.183%; --d: 450ms">江苏/陕西</p>
+        </section>
+        <section class="info-panel info-panel-skills" aria-label="Skills detail">
+          <div class="skills-grid">
+            <span class="skill-chip" style="--i: 0; --x: 67.5%; --y: 37.62%"><img src="网站素材/skills/adobe-apps-1.svg" alt="Adobe Illustrator"></span>
+            <span class="skill-chip" style="--i: 1; --x: 73.125%; --y: 37.62%"><img src="网站素材/skills/adobe-apps-2.svg" alt="Adobe Photoshop"></span>
+            <span class="skill-chip" style="--i: 2; --x: 78.75%; --y: 37.62%"><img src="网站素材/skills/adobe-apps-3.svg" alt="Adobe Premiere"></span>
+            <span class="skill-chip" style="--i: 3; --x: 84.375%; --y: 37.62%"><img src="网站素材/skills/adobe-apps-5.svg" alt="Adobe After Effects"></span>
+            <span class="skill-chip" style="--i: 4; --x: 90%; --y: 37.62%"><img src="网站素材/skills/adobe-apps-4.svg" alt="Adobe InDesign"></span>
+            <span class="skill-chip" style="--i: 5; --x: 67.5%; --y: 46.154%"><img src="网站素材/skills/adobe-apps.svg" alt="Figma"></span>
+            <span class="skill-chip" style="--i: 6; --x: 73.125%; --y: 46.154%; --icon-scale: .56"><img src="网站素材/skills/spline-logo.svg" alt="Spline"></span>
+            <span class="skill-chip" style="--i: 7; --x: 78.75%; --y: 46.154%; --icon-scale: .72"><img src="网站素材/skills/group-8.svg" alt="Blender"></span>
+            <span class="skill-chip" style="--i: 8; --x: 84.375%; --y: 46.154%; --icon-scale: .68"><img src="网站素材/skills/vector.svg" alt="CapCut"></span>
+            <span class="skill-chip" style="--i: 9; --x: 90%; --y: 46.154%; --icon-scale: .72"><img src="网站素材/skills/mark-1.svg" alt="Rhino"></span>
+            <span class="skill-chip" style="--i: 10; --x: 67.5%; --y: 54.688%; --icon-scale: .78"><img src="网站素材/skills/gemini.svg" alt="Gemini"></span>
+            <span class="skill-chip" style="--i: 11; --x: 73.125%; --y: 54.688%; --icon-scale: .78"><img src="网站素材/skills/logo.svg" alt="Codex"></span>
+            <span class="skill-chip" style="--i: 12; --x: 78.75%; --y: 54.688%; --icon-scale: .62"><img src="网站素材/skills/mark.svg" alt="Claude"></span>
+            <span class="skill-chip" style="--i: 13; --x: 84.375%; --y: 54.688%; --icon-scale: .72"><img src="网站素材/skills/vector-1.svg" alt="ChatGPT"></span>
+            <span class="skill-chip" style="--i: 14; --x: 90%; --y: 54.688%; --icon-scale: .5"><img src="网站素材/skills/group-9.svg" alt="More tools"></span>
+          </div>
+        </section>
+        <section class="info-panel info-panel-philosophy philosophy-panel" aria-label="Philosophy detail">
+          <h3 class="figma-node figma-cn figma-fs-32 figma-copy-title info-detail-target" style="--x: 65.234%; --y: 23.317%; --d: 30ms">搞點「動靜」</h3>
+          <div class="figma-node figma-cn figma-fs-20 philosophy-copy info-detail-target" style="--x: 65.234%; --y: 31.971%; --d: 120ms">
+            <p>在有些無聊的一切事物上，搞一點有趣的<strong>動靜</strong>，這就是我的設計理念。</p>
+            <p>做<strong>有動、有靜、有趣、有深意</strong>的設計。</p>
+          </div>
+          <h3 class="figma-node figma-cn figma-fs-32 figma-copy-title info-detail-target" style="--x: 65.234%; --y: 51.322%; --d: 210ms">Bring me into design</h3>
+          <div class="figma-node figma-cn figma-fs-16 philosophy-copy philosophy-copy-en info-detail-target" style="--x: 65.234%; --y: 59.255%; --d: 300ms">
+            <p>In all the somewhat tedious things of this world, stir up a bit of playful stir.</p>
+            <p>Xi Mu in Chinese, means both motion and stillness.</p>
+            <p>To create designs with motion and stillness, with wit and depth.</p>
+          </div>
+        </section>
+        <section class="info-panel info-panel-recognition" aria-label="Recognition detail">
+          <ul class="recognition-list">
+            <li style="--i: 0; --y: 22.476%"><span class="recognition-cn">国家奖学金2024</span><span class="recognition-en">China National Scholarship 2024</span></li>
+            <li style="--i: 1; --y: 30.409%"><span class="recognition-cn">国家奖学金2025</span><span class="recognition-en">China National Scholarship 2025</span></li>
+            <li style="--i: 2; --y: 43.111%"><span class="recognition-cn">中国国际大学生创新大赛</span><span class="recognition-en">China International College Students' Innovation Competition</span></li>
+            <li style="--i: 3; --y: 50.721%"><span class="recognition-cn">挑战杯</span><span class="recognition-en">Challenge Cup</span></li>
+            <li style="--i: 4; --y: 57.332%"><span class="recognition-cn">MUSE设计奖</span><span class="recognition-en">MUSE Design Awards</span></li>
+            <li style="--i: 5; --y: 63.942%"><span class="recognition-cn">米兰设计周</span><span class="recognition-en">Milan Design Week</span></li>
+            <li style="--i: 6; --y: 70.553%"><span class="recognition-cn">金犊奖</span><span class="recognition-en">Times Young Creative Awards (Golden Awards)</span></li>
+            <li style="--i: 7; --y: 77.163%"><span class="recognition-cn">未来设计师</span><span class="recognition-en">NCDA / ......</span></li>
+          </ul>
+        </section>
+      </div>
+    </div>
+  </section>
+
+  <section class="projects-scene" id="projects" aria-label="projects" data-project-shape="base">
+    <canvas class="quiet-wave-canvas" aria-hidden="true"></canvas>
+    <canvas class="motion-shape-canvas" aria-hidden="true"></canvas>
+    <div class="project-marquee-layer" aria-hidden="true">
+      <div class="project-marquee-track"></div>
+    </div>
+    <svg width="0" height="0" aria-hidden="true" focusable="false">
+      <defs>
+        <clipPath id="project-halves-clip" clipPathUnits="objectBoundingBox">
+          <path transform="scale(0.00078125 0.001201923)" d="M 639.9685825686513 402 C 720.0711806513529 402 786.0492655819787 341.2113282080932 794.8929995706843 262.93553039261956 C 795.9746073664995 253.39126389236134 788.7214480309333 245 779.2414741097543 245 C 725.0974595510375 245 554.8396841327839 245 500.7592958318485 245 C 491.21569803660816 245 484.0261878555727 253.39126389236134 485.1077956513879 262.93553039261956 C 493.9515296400936 341.2113282080932 559.9296012088506 402 640.0321992915523 402 L 639.9685825686513 402 Z"/>
+          <path transform="scale(0.00078125 0.001201923)" d="M 640.0314061907792 430 C 559.9288001596538 430 493.95073680689233 490.788654278679 485.1070021057056 569.0644671430966 C 484.0253942420451 578.6087355036436 491.27852287948906 587 500.7584976454752 587 C 554.9025157072057 587 725.1603254957217 587 779.2407181099038 587 C 788.7843168065242 587 795.9738220110714 578.6087355036436 794.8922141474109 569.0644671430966 C 786.0484794462242 490.788654278679 720.0703989096695 430 639.9677928785441 430 L 640.0314061907792 430 Z"/>
+        </clipPath>
+      </defs>
+    </svg>
+    <div class="project-marquee-red-layer" aria-hidden="true">
+      <div class="project-marquee-track project-marquee-red-track"></div>
+    </div>
+    <div class="project-orb-star-layer" aria-hidden="true"></div>
+    <svg class="projects-hourglass" viewBox="0 0 1280 832" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <g class="project-half project-half-top">
+        <path transform="translate(485 245)" d="M 154.9685825686513 157 C 235.0711806513529 157 301.04926558197866 96.21132820809319 309.8929995706843 17.935530392619576 C 310.9746073664995 8.391263892361337 303.72144803093335 0 294.24147410975434 0 C 240.09745955103753 0 69.83968413278386 0 15.759295831848506 0 C 6.215698036608158 0 -0.9738121444272921 8.391263892361337 0.10779565138791644 17.935530392619576 C 8.951529640093575 96.21132820809319 74.92960120885063 157 155.03219929155225 157 L 154.9685825686513 157 Z"/>
+      </g>
+      <g class="project-half project-half-bottom">
+        <path transform="translate(485 430)" d="M 155.0314061907792 0 C 74.92880015965375 0 8.950736806892316 60.78865427867899 0.10700210570561523 139.0644671430966 C -0.9746057579548839 148.60873550364357 6.278522879489058 157 15.7584976454752 157 C 69.90251570720574 157 240.16032549572168 157 294.2407181099038 157 C 303.7843168065242 157 310.9738220110714 148.60873550364357 309.89221414741087 139.0644671430966 C 301.0484794462242 60.78865427867899 235.07039890966954 0 154.9677928785441 0 L 155.0314061907792 0 Z"/>
+      </g>
+    </svg>
+    <div class="project-state-copy-layer" aria-hidden="true">
+      <div class="project-state-copy project-copy-quiet">
+        <p class="project-copy-line quiet-title" style="--copy-delay: 20ms">静</p>
+        <p class="project-copy-line quiet-en" style="--copy-delay: 70ms">Stillness</p>
+        <p class="project-copy-line quiet-sub" style="--copy-delay: 120ms">远观如水</p>
+      </div>
+      <div class="project-state-copy project-copy-motion">
+        <p class="project-copy-line motion-left" style="--copy-delay: 20ms">動Motion</p>
+        <p class="project-copy-line motion-right-top" style="--copy-delay: 90ms">呼吸</p>
+        <p class="project-copy-line motion-right-bottom" style="--copy-delay: 140ms">生命力</p>
+      </div>
+      <div class="project-state-copy project-copy-fun">
+        <p class="project-copy-line fun-left" style="--copy-delay: 30ms">還得有趣</p>
+        <p class="project-copy-line fun-right" style="--copy-delay: 110ms">Also Fun</p>
+      </div>
+      <div class="project-state-copy project-copy-depth">
+        <p class="project-copy-line depth-title" style="--copy-delay: 50ms">亦有深度 And Depth</p>
+      </div>
+    </div>
+    <div class="project-earth-layer" aria-hidden="true">
+      <div class="project-earth-window">
+        <div class="project-earth-strip">
+          <img src="网站素材/map.svg" alt="">
+          <img src="网站素材/map.svg" alt="">
+        </div>
+      </div>
+    </div>
+    <svg class="project-fun-eyes" viewBox="0 0 1280 832" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <rect class="project-eye-bridge" x="619" y="411" width="42" height="24" rx="3"/>
+      <circle class="project-eye-ring project-eye-ring-left" cx="545" cy="416" r="94"/>
+      <circle class="project-eye-ring project-eye-ring-right" cx="735" cy="416" r="94"/>
+      <circle class="project-eye-pupil project-eye-pupil-left" cx="545" cy="416" r="30"/>
+      <circle class="project-eye-pupil project-eye-pupil-right" cx="735" cy="416" r="30"/>
+    </svg>
+  </section>
+
+  <section class="project-list-scene" id="project-list" aria-label="projects list">
+    <div class="project-list-white-orb" aria-hidden="true"></div>
+    <div class="project-list-stage" aria-hidden="true">
+      <div class="project-list-layer project-list-base">
+        <p class="project-list-item project-list-sun">SuN</p>
+        <p class="project-list-item project-list-ximu">XimU</p>
+        <p class="project-list-item project-list-title">Projects</p>
+      </div>
+      <div class="project-list-layer project-list-final">
+        <p class="project-list-item project-list-sun">SuN</p>
+        <p class="project-list-item project-list-ximu">XimU</p>
+        <p class="project-list-item project-list-title">Projects</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="site-cursor" aria-hidden="true">
+    <div class="cursor-line cursor-line-x"></div>
+    <div class="cursor-line cursor-line-y"></div>
+    <div class="cursor-red-line cursor-red-line-x"></div>
+    <div class="cursor-red-line cursor-red-line-y"></div>
+    <div class="cursor-box"></div>
+    <div class="cursor-red-box">
+      <div class="cursor-red-box-edge cursor-red-box-top"></div>
+      <div class="cursor-red-box-edge cursor-red-box-right"></div>
+      <div class="cursor-red-box-edge cursor-red-box-bottom"></div>
+      <div class="cursor-red-box-edge cursor-red-box-left"></div>
+    </div>
+  </div>
+
+  <script>
+    // ============================================
+    // 1. 系统核心配置参数 (与 React 精准一致)
+    // ============================================
+    const CELL_SIZE = 36; // 极大简化单单元格规格以减去 60%+ 的物理对象数，确保极限轻量化
+    const CELL_GAP = 3;   // 单元格间距 (px)
+    
+    const HOVER_RADIUS = 130;     // 鼠标悬停影响半径 (px)
+    const HOVER_STRENGTH = 1.0;   // 悬停激励强度
+    const RIPPLE_SPEED = 480;     // 更轻快动感的传导速度 (px/sec)
+    const CLICK_FORCE = 2.0;      // 鼠标点击爆发波纹能量
+    const SPRING_STIFFNESS = 150; // 胡克弹性系数 (弹簧刚度)
+    const SPRING_DAMPING = 13;    // 物理阻尼系数
+
+    const COLOR_CALM = "#e81840";  // 初始状态颜色：红
+    const COLOR_ACTIVE = "#ffffff"; // 激发形态颜色：纯白色
+
+    // 五声音阶音频频率序列
+    const PENTATONIC_SCALE = [
+      130.81, 146.83, 164.81, 196.00, 220.00, // C3-A3
+      261.63, 293.66, 329.63, 392.00, 440.00, // C4-A4
+      523.25, 587.33, 659.25, 783.99, 880.00  // C5-A5
+    ];
+
+    const clamp = (val, min, max) => Math.min(Math.max(val, min), max);
+
+    // ============================================
+    // 2. 六种精细有序矢量形态的 SVG 内联模板构建
+    // ============================================
+    function createSvgShape(type, color) {
+      switch (type) {
+        case "circle-stroke": // 0: 初始空闲状态 (空心圆)
+          return `<svg viewBox="0 0 44 44" aria-label="Circle Stroke"><circle cx="22" cy="22" r="16" fill="none" stroke="${color}" stroke-width="2.5"/></svg>`;
+        
+        case "split-circle": // 1: 激发过渡 - 割裂圆
+          return `<svg viewBox="0 0 44 44" aria-label="Split Circle"><path d="M 4.12,19.5 A 18,18 0 0,1 39.88,19.5 Z" fill="${color}"/><path d="M 4.12,24.5 A 18,18 0 0,0 39.88,24.5 Z" fill="${color}"/></svg>`;
+        
+        case "double-slash": // 2: 激发过渡 - 双斜线
+          return `<svg viewBox="0 0 44 44" aria-label="Double Slashes"><line x1="12" y1="32" x2="32" y2="12" stroke="${color}" stroke-width="3" stroke-linecap="round"/><line x1="22" y1="32" x2="32" y2="22" stroke="${color}" stroke-width="3" stroke-linecap="round"/></svg>`;
+        
+        case "cross-square": // 3: 激发过渡 - 矩阵十字框
+          return `<svg viewBox="0 0 44 44" aria-label="Cross Square"><rect x="5" y="5" width="34" height="34" fill="none" stroke="${color}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><line x1="5" y1="5" x2="39" y2="39" stroke="${color}" stroke-width="2.5" stroke-linecap="round"/><line x1="39" y1="5" x2="5" y2="39" stroke="${color}" stroke-width="2.5" stroke-linecap="round"/></svg>`;
+        
+        case "inverted": // 4: 强激发 - 镂空圆正方形
+          return `<svg viewBox="0 0 44 44" aria-label="Inverted Shape"><path fill-rule="evenodd" clip-rule="evenodd" d="M5,5 h34 v34 h-34 z M22,11 a11,11 0 1,0 0,22 a11,11 0 1,0 0,-22" fill="${color}"/></svg>`;
+        
+        case "dot": // 5: 水平波峰焦点 - 极简实体圆点
+          return `<svg viewBox="0 0 44 44" aria-label="Solid Dot"><circle cx="22" cy="22" r="6" fill="${color}"/></svg>`;
+        
+        default:
+          return "";
+      }
+    }
+
+    const SHAPE_SEQUENCE = ["circle-stroke", "split-circle", "double-slash", "cross-square", "inverted", "dot"];
+
+    // ============================================
+    // 3. 物理粒子、涟漪与吉祥物底层运动缓动管理
+    // ============================================
+    let cellsPhysics = [];
+    let activeRipples = [];
+    let calmRipples = [];         // 背景渐变不透明空心圆水波
+    let wasOverMascot = false;     // 前一帧是否悬停于吉祥物上
+    let lastMascotWaveTime = 0;    // 上一次吉祥物激发波纹的时间戳
+    let mousePos = { x: -1000, y: -1000 };
+    let isMouseIn = false;
+    let containerSize = { width: 0, height: 0 };
+
+    // 悬停爆发互动控制变量
+    let hoverDuration = 0;
+    let explosionActive = false;
+    let explosionTimer = 0;
+
+    // 吉祥物缓动物理量 cache (带爆炸速度和左右眼参数)
+    const mascotCurrent = {
+      bodyX: 0,
+      bodyY: 0,
+      bodyTilt: 0,
+      bodyScale: 1.0,
+      eyesX: 0,
+      eyesY: 0,
+      eyesScale: 1.0,
+      pupilX: 0,
+      pupilY: 0,
+      pupilRadius: 18,
+      topHalfX: 0,
+      topHalfY: 0,
+      bottomHalfX: 0,
+      bottomHalfY: 0,
+      // 左右眼镜多偏角物理量
+      eyeLeftX: -48,
+      eyeRightX: 48,
+      eyeLeftY: 0,
+      eyeRightY: 0,
+      // 爆炸方向冲量速度
+      topHalfVx: 0,
+      topHalfVy: 0,
+      bottomHalfVx: 0,
+      bottomHalfVy: 0,
+      eyeLeftVx: 0,
+      eyeRightVx: 0,
+      eyeLeftVy: 0,
+      eyeRightVy: 0,
+    };
+
+    // 音频管理
+    let audioCtx = null;
+    let lastSoundTriggerTime = 0;
+    let lastRippleTriggerTime = 0;
+
+    const container = document.getElementById("sandbox-container");
+    const grid = document.getElementById("grid");
+
+    // 吉祥物节点引用
+    const mascotGroup = document.getElementById("mascot-group");
+    const shapeTop = document.getElementById("shape-top");
+    const shapeBottom = document.getElementById("shape-bottom");
+    const eyesGroup = document.getElementById("eyes-group");
+    const eyeLeft = document.getElementById("eye-left");
+    const eyeRight = document.getElementById("eye-right");
+    const pupilLeft = document.getElementById("pupil-left");
+    const pupilRight = document.getElementById("pupil-right");
+
+    // ============================================
+    // 4. 高保真 FM 调频合成器引擎 (完全免翻墙/纯本地)
+    // ============================================
+    function playChimeTone(freq, duration = 0.5) {
+      try {
+        if (!audioCtx) {
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (audioCtx.state === "suspended") {
+          audioCtx.resume();
+        }
+
+        const now = audioCtx.currentTime;
+        if (now - lastSoundTriggerTime < 0.04) return; // 抑制极限噪声与爆音
+        lastSoundTriggerTime = now;
+
+        const osc = audioCtx.createOscillator();
+        const modulator = audioCtx.createOscillator();
+        const modGain = audioCtx.createGain();
+        const mainGain = audioCtx.createGain();
+
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(freq, now);
+
+        modulator.type = "sine";
+        modulator.frequency.setValueAtTime(freq * 2.0, now); // 极清结晶排钟谐波调制
+
+        modGain.gain.setValueAtTime(freq * 0.8, now);
+        modGain.gain.exponentialRampToValueAtTime(0.01, now + duration);
+
+        mainGain.gain.setValueAtTime(0.035, now);
+        mainGain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
+        modulator.connect(modGain);
+        modGain.connect(osc.frequency);
+        osc.connect(mainGain);
+        mainGain.connect(audioCtx.destination);
+
+        modulator.start(now);
+        osc.start(now);
+
+        modulator.stop(now + duration);
+        osc.stop(now + duration);
+      } catch (e) {
+        console.warn("音频引擎受权限限制：", e);
+      }
+    }
+
+    // 波纹激励原点注入
+    function triggerRipple(x, y, force = 1.0) {
+      const now = Date.now();
+      if (now - lastRippleTriggerTime < 110 && force < 1) return;
+      lastRippleTriggerTime = now;
+
+      const maxRadius = Math.max(
+        x,
+        containerSize.width - x,
+        y,
+        containerSize.height - y
+      ) * 1.35 + 80;
+
+      // 缩减扩散距离限额至 280px，减轻大网格边缘遍历运算，提供极快凝聚力的动态
+      const finalMaxOffset = Math.min(maxRadius, 280);
+
+      activeRipples.push({
+        id: Math.random(),
+        x,
+        y,
+        radius: 0,
+        maxRadius: finalMaxOffset,
+        speed: RIPPLE_SPEED,
+        currentIntensity: force
+      });
+
+      // 实时计算该横向坐标关联频率，合成清脆铃声
+      const ratio = Math.min(1.0, Math.max(0.0, x / containerSize.width));
+      const toneIndex = Math.floor(ratio * PENTATONIC_SCALE.length);
+      const freq = PENTATONIC_SCALE[toneIndex % PENTATONIC_SCALE.length];
+      playChimeTone(freq, 0.65);
+    }
+
+    // 背景红空心圆不透明度水波激励原点注入
+    function triggerCalmRipple(x, y, force = 1.0) {
+      const maxRadius = Math.max(
+        x,
+        containerSize.width - x,
+        y,
+        containerSize.height - y
+      ) * 1.35 + 100;
+
+      calmRipples.push({
+        id: Math.random(),
+        x,
+        y,
+        radius: 0,
+        maxRadius: Math.min(maxRadius, 1500),
+        speed: 680,
+        currentIntensity: force
+      });
+    }
+
+    // ============================================
+    // 5. 自适应网格自动重绘 (Overscan 边缘零缝隙适配)
+    // ============================================
+    function initGrid() {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      containerSize = { width: w, height: h };
+
+      // 超出屏幕额外生成 2 行 2 列，以保证页面拉伸/不同高宽比缩放时完全覆盖、没有边缘斑驳
+      const cols = Math.ceil(w / (CELL_SIZE + CELL_GAP)) + 2;
+      const rows = Math.ceil(h / (CELL_SIZE + CELL_GAP)) + 2;
+
+      grid.innerHTML = "";
+      cellsPhysics = [];
+
+      // 动态修改网格 CSS Grid 列行布局与间隙
+      grid.style.gridTemplateColumns = `repeat(${cols}, ${CELL_SIZE}px)`;
+      grid.style.gridTemplateRows = `repeat(${rows}, ${CELL_SIZE}px)`;
+      grid.style.gap = `${CELL_GAP}px`;
+      grid.style.width = `${cols * CELL_SIZE + (cols - 1) * CELL_GAP}px`;
+      grid.style.height = `${rows * CELL_SIZE + (rows - 1) * CELL_GAP}px`;
+
+      const gridWidth = cols * CELL_SIZE + (cols - 1) * CELL_GAP;
+      const gridHeight = rows * CELL_SIZE + (rows - 1) * CELL_GAP;
+      const paddingX = (w - gridWidth) / 2;
+      const paddingY = (h - gridHeight) / 2;
+
+      const domFragment = document.createDocumentFragment();
+
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          const cellEl = document.createElement("div");
+          cellEl.className = "cell";
+          cellEl.style.width = `${CELL_SIZE}px`;
+          cellEl.style.height = `${CELL_SIZE}px`;
+
+          const wrapper = document.createElement("div");
+          wrapper.className = "shape-wrapper";
+
+          // 把六种变化维度的 SVG 全部内嵌进该 DOM 容器中
+          SHAPE_SEQUENCE.forEach((st, sIdx) => {
+            const stateEl = document.createElement("div");
+            stateEl.className = `shape-state ${sIdx === 0 ? 'current' : ''}`;
+            
+            // 初始空闲采用柠檬黄，动态激发阶段采用桃红
+            const matchedColor = sIdx === 0 ? COLOR_CALM : COLOR_ACTIVE;
+            stateEl.innerHTML = createSvgShape(st, matchedColor);
+            wrapper.appendChild(stateEl);
+          });
+
+          cellEl.appendChild(wrapper);
+          domFragment.appendChild(cellEl);
+
+          // 计算其绝对中心投影点
+          const cx = paddingX + c * (CELL_SIZE + CELL_GAP) + CELL_SIZE / 2;
+          const cy = paddingY + r * (CELL_SIZE + CELL_GAP) + CELL_SIZE / 2;
+          const nx = (cx - w / 2) / Math.max(w / 2, 1);
+          const ny = (cy - h / 2) / Math.max(h / 2, 1);
+          const radialDistance = Math.hypot(nx, ny);
+          const edgeFade = clamp(1.1 - radialDistance, 0, 1);
+          const sidePulse = 0.54 + 0.46 * Math.abs(Math.sin((cx / Math.max(w, 1)) * Math.PI * 2.4));
+          const verticalFade = 0.72 + 0.28 * Math.cos(ny * Math.PI * 0.72);
+          const calmRippleOpacity = clamp(edgeFade * (0.78 + sidePulse * 0.58) * verticalFade, 0, 1);
+          const baseOpacity = 0;
+
+          if (wrapper.children[0]) {
+            wrapper.children[0].style.opacity = baseOpacity.toFixed(2);
+          }
+
+          // 物理模型属性注入
+          cellsPhysics.push({
+            el: wrapper,
+            cx,
+            cy,
+            excitation: 0.0,
+            vExcitation: 0.0,
+            calmOpacity: baseOpacity,
+            baseOpacity,
+            calmRippleOpacity,
+            lastActiveIdx: 0,
+            lastCalmOpacity: baseOpacity
+          });
+        }
+      }
+
+      grid.appendChild(domFragment);
+    }
+
+    // ============================================
+    // 6. 百分之百纯物理弹簧与吉祥物交互回路 Engine
+    // ============================================
+    let lastTime = performance.now();
+
+    function updatePhysics(now) {
+      const deltaTime = (now - lastTime) / 1000;
+      lastTime = now;
+
+      const dt = Math.min(deltaTime, 0.032); // 去抖，防后台切页造成动力弹簧崩溃
+      const waveWidth = 50; // 缩减波宽（由 80 降至 50），让涟漪更加集中和灵动
+      const intensityDecay = 3.2; // 极大提高波峰阻尼衰减速度（由 1.35 升至 3.2），提前让静止单元停止刷新计算！
+
+      // A. 计算并更新所有波纹边界扩张
+      for (let index = activeRipples.length - 1; index >= 0; index--) {
+        const ripple = activeRipples[index];
+        ripple.radius += ripple.speed * dt;
+        ripple.currentIntensity -= intensityDecay * dt;
+
+        if (ripple.radius >= ripple.maxRadius || ripple.currentIntensity <= 0) {
+          activeRipples.splice(index, 1);
+        }
+      }
+
+      for (let index = calmRipples.length - 1; index >= 0; index--) {
+        const ripple = calmRipples[index];
+        ripple.radius += ripple.speed * dt;
+        ripple.currentIntensity -= 1.6 * dt; // 稍微变缓背景衰减
+
+        if (ripple.radius >= ripple.maxRadius || ripple.currentIntensity <= 0) {
+          calmRipples.splice(index, 1);
+        }
+      }
+
+      // B. 针对网格内所有物理矢量弹簧核心状态积分
+      const totalCells = cellsPhysics.length;
+
+      // 吉祥物悬浮触发中心背部水波
+      let dCenter = 9999;
+      if (containerSize.width > 0 && containerSize.height > 0) {
+        const cx = containerSize.width / 2;
+        const cy = containerSize.height / 2;
+        dCenter = isMouseIn ? Math.hypot(mousePos.x - cx, mousePos.y - cy) : 9999;
+      }
+      
+      const isOverMascot = isMouseIn && dCenter < 140;
+      if (isOverMascot) {
+        hoverDuration += dt;
+        const nowMs = Date.now();
+        if (!wasOverMascot || (nowMs - lastMascotWaveTime > 1800)) {
+          const cx = containerSize.width / 2;
+          const cy = containerSize.width >= 0 ? containerSize.height / 2 : window.innerHeight / 2;
+          triggerCalmRipple(cx, cy, 3.50);
+          lastMascotWaveTime = nowMs;
+        }
+      } else {
+        hoverDuration = 0;
+      }
+      wasOverMascot = isOverMascot;
+
+      for (let i = 0; i < totalCells; i++) {
+        const cell = cellsPhysics[i];
+        let targetExcitation = 0.0;
+
+        // 1. 全局鼠标/手指悬浮激发反馈计算
+        if (isMouseIn) {
+          const dx = mousePos.x - cell.cx;
+          const dy = mousePos.y - cell.cy;
+          const dMouse = Math.hypot(dx, dy);
+
+          if (dMouse < HOVER_RADIUS) {
+            const tHover = 1.0 - dMouse / HOVER_RADIUS;
+            targetExcitation += tHover * HOVER_STRENGTH * 3.5;
+          }
+        }
+
+        // 2. 遍历涟漪波源碰撞机械传振计算
+        const ripplesLen = activeRipples.length;
+        for (let r = 0; r < ripplesLen; r++) {
+          const ripple = activeRipples[r];
+          const rx = cell.cx - ripple.x;
+          const ry = cell.cy - ripple.y;
+          const rd = Math.hypot(rx, ry);
+
+          const distToWavefront = Math.abs(rd - ripple.radius);
+          if (distToWavefront < waveWidth) {
+            const peakPercent = 1.0 - distToWavefront / waveWidth;
+            const waveInfluence = peakPercent * ripple.currentIntensity * CLICK_FORCE;
+            targetExcitation += waveInfluence * 4.5;
+          }
+        }
+
+        // 2b. 遍历背景水波波源
+        let targetCalmOpacity = cell.baseOpacity;
+        const calmRipplesLen = calmRipples.length;
+        const calmWaveWidth = 140;
+        for (let r = 0; r < calmRipplesLen; r++) {
+          const ripple = calmRipples[r];
+          const rx = cell.cx - ripple.x;
+          const ry = cell.cy - ripple.y;
+          const rd = Math.hypot(rx, ry);
+
+          const distToWavefront = Math.abs(rd - ripple.radius);
+          if (distToWavefront < calmWaveWidth) {
+            const peakPercent = 1.0 - distToWavefront / calmWaveWidth;
+            targetCalmOpacity += peakPercent * ripple.currentIntensity * cell.calmRippleOpacity * 1.65;
+          }
+        }
+
+        // 缓动更新不透明度
+        cell.calmOpacity += (targetCalmOpacity - cell.calmOpacity) * 8.5 * dt;
+        if (cell.calmOpacity < 0.005) {
+          cell.calmOpacity = 0.0;
+        }
+        cell.calmOpacity = Math.min(cell.calmOpacity, 1.0);
+
+        // 3. 经典胡克二阶微分方程，保证顺畅回弹
+        const springForce = (targetExcitation - cell.excitation) * SPRING_STIFFNESS - cell.vExcitation * SPRING_DAMPING;
+        cell.vExcitation += springForce * dt;
+        cell.excitation += cell.vExcitation * dt;
+
+        // 微振动阈值剔除，确保交互静止时绝不发生微弱颤动闪烁，维持极致的静态稳定
+        if (cell.excitation < 0.005 && cell.vExcitation < 0.005) {
+          cell.excitation = 0.0;
+          cell.vExcitation = 0.0;
+        }
+
+        // 4. 超高性能原生 DOM 节点切换操作 (跳过重新渲染，瞬间修改 opacity，节约 CPU 热损耗)
+        const sequenceCount = SHAPE_SEQUENCE.length;
+        const activeIdx = Math.floor(cell.excitation) % sequenceCount;
+        const children = cell.el.children;
+
+        // 动态更改空闲态 (下角标 0) 的透明度
+        if (children[0]) {
+          if (activeIdx === 0) {
+            if (Math.abs(cell.lastCalmOpacity - cell.calmOpacity) > 0.005) {
+              children[0].style.opacity = cell.calmOpacity.toFixed(2);
+              cell.lastCalmOpacity = cell.calmOpacity;
+            }
+          } else {
+            children[0].style.opacity = "0";
+          }
+        }
+
+        if (cell.lastActiveIdx !== activeIdx) {
+          cell.lastActiveIdx = activeIdx;
+          
+          for (let sIdx = 1; sIdx < sequenceCount; sIdx++) {
+            if (children[sIdx]) {
+              children[sIdx].style.opacity = sIdx === activeIdx ? "1" : "0";
+            }
+          }
+        }
+      }
+
+      // C. 吉祥物 3D 轨迹深度视差粒子跟踪
+      if (containerSize.width > 0 && containerSize.height > 0) {
+        const cx = containerSize.width / 2;
+        const cy = containerSize.height / 2;
+        const time = now * 0.001;
+
+        let targetX = mousePos.x;
+        let targetY = mousePos.y;
+
+        const isMascotTracking = isMouseIn && mousePos.x >= 0 && mousePos.y >= 0;
+
+        // 自动外太空漫游
+        if (!isMascotTracking) {
+          targetX = cx + Math.sin(time * 0.6) * (cx * 0.45);
+          targetY = cy + Math.cos(time * 0.4) * (cy * 0.25);
+        }
+
+        const dx = targetX - cx;
+        const dy = targetY - cy;
+        const D = Math.hypot(dx, dy);
+        const angle = Math.atan2(dy, dx);
+
+        const targetBodyX = clamp(dx * 0.05, -16, 16);
+        const idleFloat = !isMascotTracking ? Math.sin(time * 1.8) * 8 : 0;
+        const targetBodyY = clamp(dy * 0.05, -16, 16) + idleFloat;
+
+        const normDx = cx > 0 ? dx / cx : 0;
+        const normDy = cy > 0 ? dy / cy : 0;
+        const targetBodyTilt = clamp(normDx * normDy * 32 + (normDx * 4), -22, 22);
+
+        const targetEyesX = clamp(dx * 0.11, -34, 34);
+        const targetEyesY = clamp(dy * 0.11, -34, 34);
+
+        const splitAdjustment = clamp(-dy * 0.035, -5, 12);
+        const targetTopHalfX = clamp(dx * 0.04, -12, 12) - splitAdjustment / 3;
+        const targetTopHalfY = clamp(dy * 0.04, -12, 12) - splitAdjustment;
+        const targetBottomHalfX = clamp(dx * 0.015, -5, 5) + splitAdjustment / 3;
+        const targetBottomHalfY = clamp(dy * 0.015, -5, 5) + splitAdjustment;
+
+        const maxPupilDist = 18;
+        const pupilDist = Math.min((D / 280) * maxPupilDist, maxPupilDist);
+        const targetPupilX = Math.cos(angle) * pupilDist;
+        const targetPupilY = Math.sin(angle) * pupilDist;
+
+        let targetBodyScale = 1.0;
+        if (D > 650) {
+          targetBodyScale = 1.0 + Math.sin(time * 1.4) * 0.015;
+        }
+
+        let targetEyesScale = 1.0;
+        let targetPupilRadius = 18;
+
+        if (D <= 50) {
+          targetEyesScale = 2.15;
+          targetPupilRadius = 9;
+        } else if (D > 50 && D <= 180) {
+          const p = (D - 50) / 130;
+          targetEyesScale = 2.15 - p * 1.15;
+          targetPupilRadius = 9 + p * 9;
+        } else if (D > 180 && D <= 360) {
+          targetEyesScale = 1.0;
+          targetPupilRadius = 18;
+        } else if (D > 360 && D <= 720) {
+          const p = (D - 360) / 360;
+          targetEyesScale = 1.0 - p * 0.25;
+          targetPupilRadius = 18;
+        } else {
+          targetEyesScale = 0.75;
+          targetPupilRadius = 18;
+        }
+
+        const lTranslate = 0.082;
+        const lEyes = 0.12;
+
+        const cur = mascotCurrent;
+        
+        if (explosionActive) {
+          explosionTimer += dt;
+          if (explosionTimer >= 2.0) {
+            explosionActive = false;
+          } else {
+            // Apply a smooth exponential scale-down to 0, tuned to finish within 0.4 seconds (half second limit)
+            const decay = Math.exp(-11.5 * dt);
+            cur.bodyScale *= decay;
+            cur.eyesScale *= decay;
+
+            // Align internal parts back to their default states on the same exponential curve
+            cur.topHalfX *= decay;
+            cur.topHalfY *= decay;
+            cur.bottomHalfX *= decay;
+            cur.bottomHalfY *= decay;
+            cur.eyeLeftX = -48 + (cur.eyeLeftX - (-48)) * decay;
+            cur.eyeRightX = 48 + (cur.eyeRightX - 48) * decay;
+            cur.eyeLeftY *= decay;
+            cur.eyeRightY *= decay;
+
+            // Gentle aesthetic spinning
+            cur.bodyTilt += 30 * dt;
+          }
+        } else {
+          // Standard kinematics follow-the-mouse tracking
+          cur.bodyX += (targetBodyX - cur.bodyX) * lTranslate;
+          cur.bodyY += (targetBodyY - cur.bodyY) * lTranslate;
+          cur.bodyTilt += (targetBodyTilt - cur.bodyTilt) * lTranslate;
+          cur.bodyScale += (targetBodyScale - cur.bodyScale) * lTranslate;
+
+          cur.eyesScale += (targetEyesScale - cur.eyesScale) * lEyes;
+          cur.eyesX += (targetEyesX - cur.eyesX) * lTranslate;
+          cur.eyesY += (targetEyesY - cur.eyesY) * lTranslate;
+
+          cur.topHalfX += (targetTopHalfX - cur.topHalfX) * lTranslate;
+          cur.topHalfY += (targetTopHalfY - cur.topHalfY) * lTranslate;
+          cur.bottomHalfX += (targetBottomHalfX - cur.bottomHalfX) * lTranslate;
+          cur.bottomHalfY += (targetBottomHalfY - cur.bottomHalfY) * lTranslate;
+
+          // Eye glasses smoothly lerp back to their centered offsets (-48 and 48)
+          cur.eyeLeftX += (-48 - cur.eyeLeftX) * lTranslate;
+          cur.eyeRightX += (48 - cur.eyeRightX) * lTranslate;
+          cur.eyeLeftY += (0 - cur.eyeLeftY) * lTranslate;
+          cur.eyeRightY += (0 - cur.eyeRightY) * lTranslate;
+        }
+
+        cur.pupilX += (targetPupilX - cur.pupilX) * lTranslate;
+        cur.pupilY += (targetPupilY - cur.pupilY) * lTranslate;
+        cur.pupilRadius += (targetPupilRadius - cur.pupilRadius) * lEyes;
+
+        let finalBodyScale = cur.bodyScale;
+        if (D <= 50 && isMascotTracking && !explosionActive) {
+          const jitter = now * 0.065;
+          cur.bodyX += Math.sin(jitter) * 1.6;
+          cur.bodyY += Math.cos(jitter * 0.95) * 1.6;
+          finalBodyScale += Math.sin(jitter * 1.4) * 0.02;
+        }
+
+        // 高速 DOM 变轨
+        mascotGroup.setAttribute('transform', `translate(${cur.bodyX}, ${cur.bodyY}) rotate(${cur.bodyTilt}) scale(${Math.max(0, finalBodyScale)})`);
+        shapeTop.setAttribute('transform', `translate(${cur.topHalfX}, ${cur.topHalfY})`);
+        shapeBottom.setAttribute('transform', `translate(${cur.bottomHalfX}, ${cur.bottomHalfY})`);
+        eyesGroup.setAttribute('transform', `translate(${cur.eyesX}, ${cur.eyesY}) scale(${Math.max(0, cur.eyesScale)})`);
+        if (eyeLeft) {
+          eyeLeft.setAttribute('transform', `translate(${cur.eyeLeftX}, ${cur.eyeLeftY})`);
+        }
+        if (eyeRight) {
+          eyeRight.setAttribute('transform', `translate(${cur.eyeRightX}, ${cur.eyeRightY})`);
+        }
+        pupilLeft.setAttribute('cx', cur.pupilX);
+        pupilLeft.setAttribute('cy', cur.pupilY);
+        pupilLeft.setAttribute('r', Math.max(2, cur.pupilRadius));
+        pupilRight.setAttribute('cx', cur.pupilX);
+        pupilRight.setAttribute('cy', cur.pupilY);
+        pupilRight.setAttribute('r', Math.max(2, cur.pupilRadius));
+      }
+
+      requestAnimationFrame(updatePhysics);
+    }
+
+    // ============================================
+    // 7. 高敏捷度多端触控事件绑定
+    // ============================================
+    function triggerMascotExplosion() {
+      if (explosionActive) return;
+      explosionActive = true;
+      explosionTimer = 0;
+
+      // Trigger explosive crystal chord synthesizer SFX
+      for (let i = 0; i < 6; i++) {
+        setTimeout(() => {
+          playChimeTone(120 + i * 210, 0.9);
+        }, i * 65);
+      }
+
+      const cur = mascotCurrent;
+
+      // High velocity configurations to explode the facial parts outwards
+      // Upper half contour shifts UP (negative Y)
+      cur.topHalfVx = 0;
+      cur.topHalfVy = -1800;
+
+      // Lower half contour shifts DOWN (positive Y)
+      cur.bottomHalfVx = 0;
+      cur.bottomHalfVy = 1800;
+
+      // Left eye moves straight LEFT (negative X)
+      cur.eyeLeftVx = -1800;
+      cur.eyeLeftVy = 0;
+
+      // Right eye moves straight RIGHT (positive X)
+      cur.eyeRightVx = 1800;
+      cur.eyeRightVy = 0;
+
+      // Exquisite grand ripple triggered at the core of the screen for absolute kinetic synergy
+      const cx = containerSize.width / 2;
+      const cy = containerSize.height / 2;
+      triggerRipple(cx, cy, 3.8);
+    }
+
+    function updateMousePos(clientX, clientY) {
+      if (!container) return;
+      const rect = container.getBoundingClientRect();
+      mousePos.x = clientX - rect.left;
+      mousePos.y = clientY - rect.top;
+      isMouseIn = true;
+    }
+
+    // 鼠标移动
+    container.addEventListener("mousemove", (e) => {
+      updateMousePos(e.clientX, e.clientY);
+    });
+
+    // 鼠标离开屏框
+    container.addEventListener("mouseleave", () => {
+      isMouseIn = false;
+      mousePos = { x: -1000, y: -1000 };
+    });
+
+    // 鼠标点击爆发
+    container.addEventListener("mousedown", (e) => {
+      const rect = container.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      
+      const cx = containerSize.width / 2;
+      const cy = containerSize.height / 2;
+      const clickDist = Math.hypot(x - cx, y - cy);
+
+      if (clickDist < 140 && !explosionActive) {
+        triggerMascotExplosion();
+      } else {
+        triggerRipple(x, y, 1.5);
+      }
+    });
+
+    // 鼠标中键/双指触控滚动
+    container.addEventListener("wheel", (e) => {
+      const rect = container.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      
+      const scrollForce = Math.min(1.8, Math.abs(e.deltaY) * 0.016 + 0.6);
+      triggerRipple(x, y, scrollForce);
+    }, { passive: true });
+
+    // 移动端/触控板双端多点触击物理交互适配
+    container.addEventListener("touchmove", (e) => {
+      if (e.touches.length > 0) {
+        updateMousePos(e.touches[0].clientX, e.touches[0].clientY);
+      }
+    }, { passive: true });
+
+    container.addEventListener("touchstart", (e) => {
+      if (e.touches.length > 0) {
+        const rect = container.getBoundingClientRect();
+        const x = e.touches[0].clientX - rect.left;
+        const y = e.touches[0].clientY - rect.top;
+        
+        const cx = containerSize.width / 2;
+        const cy = containerSize.height / 2;
+        const clickDist = Math.hypot(x - cx, y - cy);
+
+        if (clickDist < 140 && !explosionActive) {
+          triggerMascotExplosion();
+        } else {
+          triggerRipple(x, y, 1.5);
+        }
+      }
+    }, { passive: true });
+
+    container.addEventListener("touchend", () => {
+      isMouseIn = false;
+      mousePos = { x: -1000, y: -1000 };
+    });
+
+    // ============================================
+    // 8. 首页滚动转场：logo 导航、互动舞台与身份页
+    // ============================================
+    const root = document.documentElement;
+    const pageLogo = document.querySelector(".site-logo");
+    const logoHoverMenu = document.querySelector(".logo-hover-menu");
+    const identityNameParts = document.querySelectorAll(".name-part");
+    const informationMenuLinks = document.querySelectorAll(".information-menu:not(.information-menu-invert) a");
+    const informationPanel = document.querySelector(".information-panel");
+    const portraitFaceHotspot = document.querySelector(".portrait-face-hotspot");
+    const projectsScene = document.querySelector(".projects-scene");
+    const projectListScene = document.querySelector(".project-list-scene");
+    const projectMarqueeTrack = document.querySelector(".project-marquee-track");
+    const projectMarqueeRedTrack = document.querySelector(".project-marquee-red-track");
+    const whoLinks = document.querySelectorAll('a[href="#identity"]');
+    const projectLinks = document.querySelectorAll('a[href="#project-list"], a[href="#projects"]');
+    const siteCursor = document.querySelector(".site-cursor");
+    const cursorLineX = document.querySelector(".cursor-line-x");
+    const cursorLineY = document.querySelector(".cursor-line-y");
+    const cursorRedLineX = document.querySelector(".cursor-red-line-x");
+    const cursorRedLineY = document.querySelector(".cursor-red-line-y");
+    const cursorBox = document.querySelector(".cursor-box");
+    const cursorRedBox = document.querySelector(".cursor-red-box");
+    const peekMascot = document.querySelector(".peek-mascot");
+    const peekPupils = document.querySelectorAll(".peek-pupil");
+    const projectHalfPaths = document.querySelectorAll(".project-half path");
+    const projectHalfTop = document.querySelector(".project-half-top");
+    const projectHalfBottom = document.querySelector(".project-half-bottom");
+    const quietWaveCanvas = document.querySelector(".quiet-wave-canvas");
+    const motionShapeCanvas = document.querySelector(".motion-shape-canvas");
+    const projectOrbStarLayer = document.querySelector(".project-orb-star-layer");
+    const supportsFinePointer = window.matchMedia("(pointer: fine)").matches;
+    const cursorState = {
+      x: window.innerWidth / 2,
+      y: window.innerHeight / 2,
+      width: 14,
+      height: 14,
+    };
+    let logoMenuTimer = null;
+    let informationDetailTimer = null;
+    let scrollSnapTimer = null;
+    let projectListReplayTimer = null;
+    let wasProjectListReady = false;
+    const projectShapeStates = ["quiet", "motion", "fun", "depth", "base"];
+    let projectShapeIndex = -1;
+    const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
+    const smoothstep = (edge0, edge1, value) => {
+      const t = clamp((value - edge0) / (edge1 - edge0), 0, 1);
+      return t * t * (3 - 2 * t);
+    };
+    const lerp = (from, to, t) => from + (to - from) * t;
+
+    function getScrollDistance() {
+      return Math.max(window.innerHeight * 1.02, 1);
+    }
+
+    function updatePageScrollState() {
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      const scrollDistance = getScrollDistance();
+      const progress = clamp(window.scrollY / scrollDistance, 0, 1);
+      const pageProgress = window.scrollY / scrollDistance;
+      const logoProgress = easeOutCubic(smoothstep(0.04, 0.68, progress));
+      const navProgress = smoothstep(0.18, 0.56, progress);
+      const stageProgress = smoothstep(0.18, 0.82, progress);
+      const identityProgress = smoothstep(0.68, 0.96, progress);
+      const informationProgress = smoothstep(1.24, 1.92, pageProgress);
+      const projectsProgress = smoothstep(2.24, 2.92, pageProgress);
+      const projectListProgress = smoothstep(3.14, 3.92, pageProgress);
+      const projectListCover = smoothstep(3.04, 3.48, pageProgress);
+      const projectListContent = smoothstep(3.34, 3.68, pageProgress);
+      const projectListFinal = smoothstep(3.70, 3.98, pageProgress);
+      const identityExitProgress = smoothstep(1.05, 1.72, pageProgress);
+      const bgProgress = smoothstep(0.44, 0.92, progress);
+      const projectListBgProgress = smoothstep(3.34, 3.58, pageProgress);
+
+      const initialLogoWidth = clamp(vw * 0.115, 118, 196);
+      const finalLogoWidth = vw < 700 ? 58 : 78;
+      const initialLogoTop = clamp(vh * 0.054, 28, 64);
+      const finalLogoTop = vw < 700 ? 24 : 30;
+      const initialLogoLeft = vw / 2;
+      const finalLogoLeft = (vw < 700 ? 20 : 42) + finalLogoWidth / 2;
+      const settledLogoWidth = lerp(initialLogoWidth, finalLogoWidth, logoProgress);
+      const settledLogoTop = lerp(initialLogoTop, finalLogoTop, logoProgress);
+      const settledLogoLeft = lerp(initialLogoLeft, finalLogoLeft, logoProgress);
+
+      root.style.setProperty("--logo-width", `${settledLogoWidth.toFixed(2)}px`);
+      root.style.setProperty("--logo-top", `${settledLogoTop.toFixed(2)}px`);
+      root.style.setProperty("--logo-left", `${settledLogoLeft.toFixed(2)}px`);
+      root.style.setProperty("--nav-progress", navProgress.toFixed(3));
+      root.style.setProperty("--nav-y", `${lerp(-10, 0, navProgress).toFixed(2)}px`);
+      root.style.setProperty("--nav-top", `${clamp(22, vh * 0.043, 42).toFixed(2)}px`);
+      root.style.setProperty("--nav-right", `${clamp(20, vw * 0.046, 62).toFixed(2)}px`);
+      root.style.setProperty("--home-menu-opacity", `${(1 - navProgress).toFixed(3)}`);
+      const pageBgR = Math.round(lerp(lerp(0, 253, bgProgress), 255, projectListBgProgress));
+      const pageBgG = Math.round(lerp(lerp(0, 0, bgProgress), 255, projectListBgProgress));
+      const pageBgB = Math.round(lerp(lerp(0, 56, bgProgress), 255, projectListBgProgress));
+      root.style.setProperty("--page-bg", `rgb(${pageBgR}, ${pageBgG}, ${pageBgB})`);
+      root.style.setProperty("--stage-y", `${(-stageProgress * vh * 1.12).toFixed(2)}px`);
+      root.style.setProperty("--stage-opacity", `${(1 - identityProgress * 0.92).toFixed(3)}`);
+      root.style.setProperty("--identity-opacity", `${(identityProgress * (1 - informationProgress)).toFixed(3)}`);
+      root.style.setProperty("--identity-y", `${((lerp(vh * 0.08, 0, identityProgress) - vh * 0.08 * identityExitProgress) * (1 - informationProgress)).toFixed(2)}px`);
+      root.style.setProperty("--information-opacity", `${(informationProgress * (1 - projectsProgress)).toFixed(3)}`);
+      root.style.setProperty("--information-y", `${(lerp(vh * 0.1, 0, informationProgress) - vh * 0.08 * projectsProgress).toFixed(2)}px`);
+      root.style.setProperty("--projects-opacity", `${(projectsProgress * (1 - projectListProgress)).toFixed(3)}`);
+      root.style.setProperty("--projects-y", `${(lerp(vh * 0.1, 0, projectsProgress) - vh * 0.08 * projectListProgress).toFixed(2)}px`);
+      root.style.setProperty("--project-list-opacity", Math.max(projectListProgress, projectListCover).toFixed(3));
+      root.style.setProperty("--project-list-y", `${lerp(vh * 0.1, 0, projectListProgress).toFixed(2)}px`);
+      root.style.setProperty("--project-list-cover", projectListCover.toFixed(3));
+      root.style.setProperty("--project-list-orb-scale", `${lerp(0.06, 1.78, projectListCover).toFixed(3)}`);
+      root.style.setProperty("--project-list-content", projectListContent.toFixed(3));
+      root.style.setProperty("--project-list-final", projectListFinal.toFixed(3));
+      root.style.setProperty("--project-list-base-opacity", `${(projectListContent * (1 - projectListFinal)).toFixed(3)}`);
+      root.style.setProperty("--project-list-final-opacity", `${(projectListContent * projectListFinal).toFixed(3)}`);
+
+      document.body.classList.toggle("nav-ready", navProgress > 0.6);
+      document.body.classList.toggle("identity-ready", identityProgress > 0.45 && informationProgress < 0.8);
+      document.body.classList.toggle("information-ready", informationProgress > 0.55 && projectsProgress < 0.8);
+      document.body.classList.toggle("projects-ready", projectsProgress > 0.55 && projectListProgress < 0.65);
+      const isProjectListReady = projectListProgress > 0.55;
+      document.body.classList.toggle("project-list-ready", isProjectListReady);
+      if (isProjectListReady && !wasProjectListReady) {
+        if (projectListReplayTimer) {
+          window.clearTimeout(projectListReplayTimer);
+          projectListReplayTimer = null;
+        }
+        document.body.classList.remove("project-list-color-replay");
+        void document.body.offsetWidth;
+        document.body.classList.add("project-list-color-replay");
+      } else if (!isProjectListReady && wasProjectListReady) {
+        if (projectListReplayTimer) {
+          window.clearTimeout(projectListReplayTimer);
+          projectListReplayTimer = null;
+        }
+        document.body.classList.remove("project-list-color-replay");
+      }
+      wasProjectListReady = isProjectListReady;
+      document.body.classList.toggle("nav-shadow-ready", informationProgress > 0.45);
+      document.body.classList.toggle("custom-cursor-active", supportsFinePointer && progress > 0.58);
+    }
+
+    function snapToNearestPage() {
+      const scrollDistance = getScrollDistance();
+      const currentPage = window.scrollY / scrollDistance;
+      const nearestPage = clamp(Math.round(currentPage), 0, 4);
+      const targetY = nearestPage * scrollDistance;
+
+      if (Math.abs(window.scrollY - targetY) < 3) return;
+      window.scrollTo({ top: targetY, behavior: "smooth" });
+    }
+
+    function handlePageScroll() {
+      updatePageScrollState();
+      if (scrollSnapTimer) {
+        window.clearTimeout(scrollSnapTimer);
+      }
+      scrollSnapTimer = window.setTimeout(snapToNearestPage, 150);
+    }
+
+    window.addEventListener("scroll", handlePageScroll, { passive: true });
+
+    function renderSiteCursor() {
+      if (!siteCursor || !cursorLineX || !cursorLineY || !cursorBox) return;
+      siteCursor.style.setProperty("--cursor-gap-left", `${Math.max(0, cursorState.x - cursorState.width / 2).toFixed(1)}px`);
+      siteCursor.style.setProperty("--cursor-gap-right", `${Math.min(window.innerWidth, cursorState.x + cursorState.width / 2).toFixed(1)}px`);
+      siteCursor.style.setProperty("--cursor-gap-top", `${Math.max(0, cursorState.y - cursorState.height / 2).toFixed(1)}px`);
+      siteCursor.style.setProperty("--cursor-gap-bottom", `${Math.min(window.innerHeight, cursorState.y + cursorState.height / 2).toFixed(1)}px`);
+      cursorLineX.style.transform = `translate3d(0, ${cursorState.y.toFixed(1)}px, 0)`;
+      cursorLineY.style.transform = `translate3d(${cursorState.x.toFixed(1)}px, 0, 0)`;
+      cursorBox.style.width = `${cursorState.width.toFixed(1)}px`;
+      cursorBox.style.height = `${cursorState.height.toFixed(1)}px`;
+      cursorBox.style.transform = `translate3d(${(cursorState.x - cursorState.width / 2).toFixed(1)}px, ${(cursorState.y - cursorState.height / 2).toFixed(1)}px, 0)`;
+      if (cursorRedBox) {
+        cursorRedBox.style.width = `${cursorState.width.toFixed(1)}px`;
+        cursorRedBox.style.height = `${cursorState.height.toFixed(1)}px`;
+        cursorRedBox.style.transform = cursorBox.style.transform;
+      }
+      renderProjectCursorOverlays();
+    }
+
+    function isPointOnProjectWhite(x, y) {
+      if (!document.body.classList.contains("projects-ready")) return false;
+      const point = new DOMPoint(x, y);
+      for (const path of projectHalfPaths) {
+        const matrix = path.getScreenCTM();
+        if (!matrix) continue;
+        const localPoint = point.matrixTransform(matrix.inverse());
+        if (path.isPointInFill(localPoint)) return true;
+      }
+      return false;
+    }
+
+    function makeCursorSegmentGradient(axis, fixed, max, gapStart, gapEnd) {
+      const step = 7;
+      const segments = [];
+      let start = null;
+      for (let pos = 0; pos <= max; pos += step) {
+        const sample = Math.min(pos, max);
+        const inGap = sample >= gapStart && sample <= gapEnd;
+        const onWhite = !inGap && (axis === "x"
+          ? isPointOnProjectWhite(sample, fixed)
+          : isPointOnProjectWhite(fixed, sample));
+        if (onWhite && start === null) {
+          start = Math.max(0, sample - step);
+        } else if (!onWhite && start !== null) {
+          segments.push([start, sample]);
+          start = null;
+        }
+      }
+      if (start !== null) {
+        segments.push([start, max]);
+      }
+      if (segments.length === 0) return "transparent";
+      const direction = axis === "x" ? "to right" : "to bottom";
+      const stops = ["transparent 0px"];
+      segments.forEach(([from, to]) => {
+        stops.push(`transparent ${from.toFixed(1)}px`);
+        stops.push(`#fd0038 ${from.toFixed(1)}px`);
+        stops.push(`#fd0038 ${to.toFixed(1)}px`);
+        stops.push(`transparent ${to.toFixed(1)}px`);
+      });
+      stops.push(`transparent ${max.toFixed(1)}px`);
+      return `linear-gradient(${direction}, ${stops.join(", ")})`;
+    }
+
+    function makeCursorBoxSegmentGradient(axis, fixed, start, length) {
+      const step = 2;
+      const segments = [];
+      let segmentStart = null;
+      for (let pos = 0; pos <= length; pos += step) {
+        const local = Math.min(pos, length);
+        const viewportPos = start + local;
+        const onWhite = axis === "x"
+          ? isPointOnProjectWhite(viewportPos, fixed)
+          : isPointOnProjectWhite(fixed, viewportPos);
+        if (onWhite && segmentStart === null) {
+          segmentStart = Math.max(0, local - step);
+        } else if (!onWhite && segmentStart !== null) {
+          segments.push([segmentStart, local]);
+          segmentStart = null;
+        }
+      }
+      if (segmentStart !== null) {
+        segments.push([segmentStart, length]);
+      }
+      if (segments.length === 0) return "transparent";
+      const direction = axis === "x" ? "to right" : "to bottom";
+      const stops = ["transparent 0px"];
+      segments.forEach(([from, to]) => {
+        stops.push(`transparent ${from.toFixed(1)}px`);
+        stops.push(`#fd0038 ${from.toFixed(1)}px`);
+        stops.push(`#fd0038 ${to.toFixed(1)}px`);
+        stops.push(`transparent ${to.toFixed(1)}px`);
+      });
+      stops.push(`transparent ${length.toFixed(1)}px`);
+      return `linear-gradient(${direction}, ${stops.join(", ")})`;
+    }
+
+    function setCursorRedBoxBackgrounds(top, right, bottom, left) {
+      if (!siteCursor) return;
+      siteCursor.style.setProperty("--cursor-red-box-top-bg", top);
+      siteCursor.style.setProperty("--cursor-red-box-right-bg", right);
+      siteCursor.style.setProperty("--cursor-red-box-bottom-bg", bottom);
+      siteCursor.style.setProperty("--cursor-red-box-left-bg", left);
+    }
+
+    function renderProjectCursorOverlays() {
+      if (!siteCursor || !cursorRedLineX || !cursorRedLineY) return;
+      if (!document.body.classList.contains("projects-ready")) {
+        siteCursor.style.setProperty("--cursor-red-x-bg", "transparent");
+        siteCursor.style.setProperty("--cursor-red-y-bg", "transparent");
+        setCursorRedBoxBackgrounds("transparent", "transparent", "transparent", "transparent");
+        document.body.classList.remove("project-cursor-red");
+        return;
+      }
+
+      const gapLeft = Math.max(0, cursorState.x - cursorState.width / 2);
+      const gapRight = Math.min(window.innerWidth, cursorState.x + cursorState.width / 2);
+      const gapTop = Math.max(0, cursorState.y - cursorState.height / 2);
+      const gapBottom = Math.min(window.innerHeight, cursorState.y + cursorState.height / 2);
+      siteCursor.style.setProperty("--cursor-red-x-bg", makeCursorSegmentGradient("x", cursorState.y, window.innerWidth, gapLeft, gapRight));
+      siteCursor.style.setProperty("--cursor-red-y-bg", makeCursorSegmentGradient("y", cursorState.x, window.innerHeight, gapTop, gapBottom));
+      setCursorRedBoxBackgrounds(
+        makeCursorBoxSegmentGradient("x", gapTop, gapLeft, cursorState.width),
+        makeCursorBoxSegmentGradient("y", gapRight, gapTop, cursorState.height),
+        makeCursorBoxSegmentGradient("x", gapBottom, gapLeft, cursorState.width),
+        makeCursorBoxSegmentGradient("y", gapLeft, gapTop, cursorState.height)
+      );
+      document.body.classList.toggle("project-cursor-red", isPointOnProjectWhite(cursorState.x, cursorState.y));
+    }
+
+    function updatePeekMascotEyes(clientX, clientY) {
+      if (!peekMascot || peekPupils.length === 0) return;
+      const rect = peekMascot.getBoundingClientRect();
+      const centerX = rect.left + rect.width * 0.48;
+      const centerY = rect.top + rect.height * 0.48;
+      const dx = clientX - centerX;
+      const dy = clientY - centerY;
+      const angle = Math.atan2(dy, dx);
+      const strength = Math.min(Math.hypot(dx, dy) / Math.max(rect.width, 1), 1);
+      const distance = 5 + strength * 15;
+      const pupilX = Math.cos(angle) * distance;
+      const pupilY = Math.sin(angle) * distance;
+      const rotate = clamp(dx / Math.max(rect.width * 0.62, 1), -1, 1) * 8
+        + clamp(dy / Math.max(rect.height * 0.9, 1), -1, 1) * 2;
+
+      peekMascot.style.setProperty("--peek-rotate", `${rotate.toFixed(2)}deg`);
+
+      peekPupils.forEach((pupil) => {
+        pupil.setAttribute("cx", pupilX.toFixed(2));
+        pupil.setAttribute("cy", pupilY.toFixed(2));
+      });
+    }
+
+    function updateSiteCursor(event) {
+      if (!supportsFinePointer) return;
+      document.body.classList.add("cursor-seen");
+      updatePeekMascotEyes(event.clientX, event.clientY);
+      const target = event.target instanceof Element ? event.target.closest("[data-cursor-target], .magnetic-target") : null;
+      if (target && document.body.classList.contains("custom-cursor-active")) {
+        const rect = target.getBoundingClientRect();
+        const paddingX = Math.max(8, Math.min(17, rect.width * 0.07));
+        const paddingY = Math.max(6, Math.min(13, rect.height * 0.11));
+        cursorState.x = rect.left + rect.width / 2;
+        cursorState.y = rect.top + rect.height / 2;
+        cursorState.width = rect.width + paddingX * 2;
+        cursorState.height = rect.height + paddingY * 2;
+      } else {
+        cursorState.x = event.clientX;
+        cursorState.y = event.clientY;
+        cursorState.width = 14;
+        cursorState.height = 14;
+      }
+      renderSiteCursor();
+    }
+
+    window.addEventListener("mousemove", updateSiteCursor, { passive: true });
+    window.addEventListener("mouseleave", () => {
+      document.body.classList.remove("cursor-seen");
+      document.body.classList.remove("project-cursor-red");
+    });
+
+    identityNameParts.forEach((part) => {
+      part.addEventListener("mouseenter", () => {
+        document.body.classList.add("peek-surprise");
+      });
+      part.addEventListener("mouseleave", () => {
+        document.body.classList.remove("peek-surprise");
+      });
+    });
+
+    informationMenuLinks.forEach((link) => {
+      link.addEventListener("mouseenter", () => {
+        if (informationDetailTimer) {
+          window.clearTimeout(informationDetailTimer);
+        }
+        const activeInfo = link.dataset.infoTrigger;
+        if (informationPanel && activeInfo) {
+          informationPanel.dataset.activeInfo = activeInfo;
+        }
+        document.body.classList.add("peek-slide-out");
+      });
+      link.addEventListener("mouseleave", () => {
+        informationDetailTimer = window.setTimeout(() => {
+          document.body.classList.remove("peek-slide-out");
+          if (informationPanel) {
+            delete informationPanel.dataset.activeInfo;
+          }
+        }, 180);
+      });
+    });
+
+    portraitFaceHotspot?.addEventListener("mouseenter", () => {
+      document.body.classList.add("peek-surprise", "peek-face-wow");
+    });
+
+    portraitFaceHotspot?.addEventListener("mouseleave", () => {
+      document.body.classList.remove("peek-surprise", "peek-face-wow");
+    });
+
+    pageLogo?.addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    function openLogoMenu() {
+      if (logoMenuTimer) {
+        window.clearTimeout(logoMenuTimer);
+      }
+      document.body.classList.add("logo-menu-open");
+    }
+
+    function closeLogoMenuSoon() {
+      if (logoMenuTimer) {
+        window.clearTimeout(logoMenuTimer);
+      }
+      logoMenuTimer = window.setTimeout(() => {
+        document.body.classList.remove("logo-menu-open");
+      }, 520);
+    }
+
+    pageLogo?.addEventListener("mouseenter", openLogoMenu);
+    pageLogo?.addEventListener("mouseleave", closeLogoMenuSoon);
+    logoHoverMenu?.addEventListener("mouseenter", openLogoMenu);
+    logoHoverMenu?.addEventListener("mouseleave", closeLogoMenuSoon);
+
+    whoLinks.forEach((link) => {
+      link.addEventListener("click", (event) => {
+        event.preventDefault();
+        document.body.classList.remove("logo-menu-open");
+        window.scrollTo({ top: getScrollDistance(), behavior: "smooth" });
+      });
+    });
+
+    projectLinks.forEach((link) => {
+      link.addEventListener("click", (event) => {
+        event.preventDefault();
+        document.body.classList.remove("logo-menu-open");
+        window.scrollTo({ top: getScrollDistance() * 4, behavior: "smooth" });
+      });
+    });
+
+    projectsScene?.addEventListener("click", () => {
+      projectShapeIndex = (projectShapeIndex + 1) % projectShapeStates.length;
+      const nextShape = projectShapeStates[projectShapeIndex];
+      projectsScene.classList.toggle("project-fast-quiet", nextShape === "quiet");
+      projectsScene.dataset.projectShape = nextShape;
+    });
+
+    function initQuietWaveCanvas() {
+      if (!quietWaveCanvas || !projectsScene) return;
+      const ctx = quietWaveCanvas.getContext("2d", { alpha: true });
+      if (!ctx) return;
+
+      const settings = {
+        lineSpacing: 12,
+        waveSpeed: 0.5,
+        waveAmplitude: 6,
+        waveFrequency: 0.006,
+        waveComplexity: 2,
+        interactionRadius: 180,
+        interactionStrength: 1.5,
+        lineWidth: 1,
+        lineOpacity: 1,
+        autoFlowSpeedX: 0.01,
+      };
+      const maxLines = 300;
+      const maxPoints = 700;
+      const pointStep = 8;
+      const displacement = new Float32Array(maxLines * maxPoints);
+      const velocity = new Float32Array(maxLines * maxPoints);
+      const mouse = { x: -1000, y: -1000, active: false };
+      const lastMouse = { x: -1000, y: -1000 };
+      let mouseSpeed = 0;
+      let lastTime = performance.now();
+      let timeAccumulator = 0;
+      let width = 0;
+      let height = 0;
+
+      function resizeQuietCanvas() {
+        const rect = quietWaveCanvas.getBoundingClientRect();
+        const dpr = window.devicePixelRatio || 1;
+        width = Math.max(1, rect.width);
+        height = Math.max(1, rect.height);
+        quietWaveCanvas.width = Math.round(width * dpr);
+        quietWaveCanvas.height = Math.round(height * dpr);
+        quietWaveCanvas.style.width = `${width}px`;
+        quietWaveCanvas.style.height = `${height}px`;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+
+      function updateQuietMouse(event) {
+        if (projectsScene.dataset.projectShape !== "quiet" || !document.body.classList.contains("projects-ready")) {
+          mouse.active = false;
+          return;
+        }
+        const rect = quietWaveCanvas.getBoundingClientRect();
+        mouse.x = event.clientX - rect.left;
+        mouse.y = event.clientY - rect.top;
+        mouse.active = mouse.x >= 0 && mouse.y >= 0 && mouse.x <= rect.width && mouse.y <= rect.height;
+      }
+
+      function drawQuietWaves(timestamp) {
+        requestAnimationFrame(drawQuietWaves);
+        const isQuiet = projectsScene.dataset.projectShape === "quiet" && document.body.classList.contains("projects-ready");
+        const delta = Math.min(50, timestamp - lastTime);
+        lastTime = timestamp;
+        timeAccumulator += delta * 0.0025 * settings.waveSpeed;
+
+        ctx.clearRect(0, 0, width, height);
+        if (!isQuiet || width <= 1 || height <= 1) {
+          mouse.active = false;
+          return;
+        }
+
+        let instantSpeed = 0;
+        if (mouse.active) {
+          if (lastMouse.x !== -1000) {
+            instantSpeed = Math.hypot(mouse.x - lastMouse.x, mouse.y - lastMouse.y);
+          }
+          lastMouse.x = mouse.x;
+          lastMouse.y = mouse.y;
+        } else {
+          lastMouse.x = -1000;
+          lastMouse.y = -1000;
+        }
+
+        const targetSpeed = Math.min(25, instantSpeed);
+        if (targetSpeed > 0.1) {
+          mouseSpeed += (targetSpeed - mouseSpeed) * 0.12;
+        } else {
+          mouseSpeed *= 0.88;
+          if (mouseSpeed < 0.01) mouseSpeed = 0;
+        }
+
+        const spacing = settings.lineSpacing;
+        const startY = -spacing;
+        const endY = height + spacing;
+        const lineCount = Math.min(maxLines, Math.ceil((endY - startY) / spacing));
+        const pointsPerLine = Math.min(maxPoints - 1, Math.ceil(width / pointStep) + 2);
+        const stiffness = 0.05;
+        const damping = 0.85;
+
+        for (let i = 0; i < lineCount; i++) {
+          const lineIndex = i * maxPoints;
+          const yBase = startY + i * spacing;
+
+          for (let j = 0; j < pointsPerLine; j++) {
+            const idx = lineIndex + j;
+            const x = j * pointStep;
+            const springForce = -stiffness * displacement[idx];
+            velocity[idx] = (velocity[idx] + springForce) * damping;
+            displacement[idx] += velocity[idx];
+
+            if (mouse.active) {
+              const dx = x - mouse.x;
+              const dy = yBase - mouse.y;
+              const dist = Math.hypot(dx, dy);
+              if (dist < settings.interactionRadius && dist > 0) {
+                const forcePercent = 1 - dist / settings.interactionRadius;
+                const speedFactor = Math.min(1, mouseSpeed * 0.16);
+                const targetDisplace = dy * Math.pow(forcePercent, 2) * settings.interactionStrength * 1.5 * speedFactor;
+                displacement[idx] += (targetDisplace - displacement[idx]) * 0.28;
+                velocity[idx] *= 0.85;
+              }
+            }
+          }
+        }
+
+        ctx.lineWidth = settings.lineWidth;
+        ctx.strokeStyle = "#fff";
+        ctx.globalAlpha = settings.lineOpacity;
+        ctx.shadowBlur = 0;
+
+        for (let i = 0; i < lineCount; i++) {
+          const yBase = startY + i * spacing;
+          const lineIndex = i * maxPoints;
+          const phase = i * 0.12;
+          ctx.beginPath();
+
+          for (let x = 0, p = 0; x <= width + pointStep; x += pointStep, p++) {
+            let dy = Math.sin((x + timeAccumulator * settings.autoFlowSpeedX * 500) * settings.waveFrequency + timeAccumulator + phase) * settings.waveAmplitude;
+            if (settings.waveComplexity >= 2) {
+              dy += Math.cos((x - timeAccumulator * settings.autoFlowSpeedX * 300) * settings.waveFrequency * 2.2 - timeAccumulator * 1.34 + phase * 2) * settings.waveAmplitude * 0.38;
+            }
+            const j = Math.min(pointsPerLine - 1, Math.floor(x / pointStep));
+            const finalY = yBase + dy + displacement[lineIndex + j];
+            if (p === 0) {
+              ctx.moveTo(x, finalY);
+            } else {
+              ctx.lineTo(x, finalY);
+            }
+          }
+          ctx.stroke();
+        }
+        ctx.globalAlpha = 1;
+      }
+
+      resizeQuietCanvas();
+      new ResizeObserver(resizeQuietCanvas).observe(projectsScene);
+      window.addEventListener("pointermove", updateQuietMouse, { passive: true });
+      window.addEventListener("pointerleave", () => {
+        mouse.active = false;
+      });
+      requestAnimationFrame(drawQuietWaves);
+    }
+
+    initQuietWaveCanvas();
+
+    function initMotionShapeCanvas() {
+      if (!motionShapeCanvas || !projectsScene) return;
+      const ctx = motionShapeCanvas.getContext("2d", { alpha: true });
+      if (!ctx) return;
+
+      const motionSettings = {
+        cellSize: 36,
+        cellGap: 3,
+        hoverRadius: 150,
+        rippleSpeed: 560,
+        fadeSpeed: 2.6,
+        autoRippleInterval: 1650,
+        breathDuration: 1180,
+        breathAmount: 22,
+        mouseSparkRadius: 72,
+        baseLevel: 0,
+      };
+      let width = 0;
+      let height = 0;
+      let dpr = window.devicePixelRatio || 1;
+      let cells = [];
+      let ripples = [];
+      let lastTime = performance.now();
+      let mouse = { x: -1000, y: -1000, active: false };
+      let previousMouse = { x: -1000, y: -1000 };
+      let lastAutoRippleTime = 0;
+      let lastMouseSparkTime = 0;
+      let breathStartTime = 0;
+
+      function resizeMotionCanvas() {
+        const rect = motionShapeCanvas.getBoundingClientRect();
+        dpr = window.devicePixelRatio || 1;
+        width = Math.max(1, rect.width);
+        height = Math.max(1, rect.height);
+        motionShapeCanvas.width = Math.round(width * dpr);
+        motionShapeCanvas.height = Math.round(height * dpr);
+        motionShapeCanvas.style.width = `${width}px`;
+        motionShapeCanvas.style.height = `${height}px`;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+        const pitch = motionSettings.cellSize + motionSettings.cellGap;
+        const cols = Math.ceil(width / pitch) + 2;
+        const rows = Math.ceil(height / pitch) + 2;
+        const gridWidth = cols * motionSettings.cellSize + (cols - 1) * motionSettings.cellGap;
+        const gridHeight = rows * motionSettings.cellSize + (rows - 1) * motionSettings.cellGap;
+        const offsetX = (width - gridWidth) / 2;
+        const offsetY = (height - gridHeight) / 2;
+        cells = [];
+
+        for (let row = 0; row < rows; row++) {
+          for (let col = 0; col < cols; col++) {
+            const x = offsetX + col * pitch + motionSettings.cellSize / 2;
+            const y = offsetY + row * pitch + motionSettings.cellSize / 2;
+            cells.push({
+              x,
+              y,
+              seed: (row * 37 + col * 17) % SHAPE_SEQUENCE.length,
+              intensity: 0,
+              spark: 0,
+              sparkType: "circle-stroke",
+              phase: 0,
+            });
+          }
+        }
+      }
+
+      function addCenterMotionRipple(strength = 1) {
+        ripples.push({
+          x: width / 2,
+          y: height / 2,
+          radius: 0,
+          maxRadius: Math.hypot(width, height) * 0.62,
+          intensity: strength,
+        });
+      }
+
+      function scatterMotionSparks(x, y, moved) {
+        const sparkCount = clamp(Math.round(moved / 18), 2, 6);
+        const candidates = [];
+        for (const cell of cells) {
+          const dist = Math.hypot(cell.x - x, cell.y - y);
+          if (dist < motionSettings.mouseSparkRadius && !isPointOnProjectWhite(cell.x, cell.y)) {
+            candidates.push({ cell, dist, score: dist + Math.random() * 18 });
+          }
+        }
+        candidates.sort((a, b) => a.score - b.score);
+        for (let i = 0; i < sparkCount && candidates.length > 0; i++) {
+          const pickIndex = Math.floor(Math.random() * Math.min(3, candidates.length));
+          const pick = candidates.splice(pickIndex, 1)[0];
+          const falloff = 1 - pick.dist / motionSettings.mouseSparkRadius;
+          pick.cell.spark = Math.max(pick.cell.spark, clamp(0.45 + falloff * 0.75 + Math.random() * 0.35, 0, 1.35));
+          pick.cell.sparkType = SHAPE_SEQUENCE[Math.floor(Math.random() * SHAPE_SEQUENCE.length)];
+        }
+      }
+
+      function updateMotionMouse(event) {
+        if (projectsScene.dataset.projectShape !== "motion" || !document.body.classList.contains("projects-ready")) {
+          mouse.active = false;
+          return;
+        }
+        const rect = motionShapeCanvas.getBoundingClientRect();
+        mouse.x = event.clientX - rect.left;
+        mouse.y = event.clientY - rect.top;
+        const isInside = mouse.x >= 0 && mouse.y >= 0 && mouse.x <= rect.width && mouse.y <= rect.height;
+        const isOnWhite = isInside && isPointOnProjectWhite(event.clientX, event.clientY);
+        mouse.active = isInside && !isOnWhite;
+
+        if (!mouse.active) {
+          previousMouse.x = -1000;
+          previousMouse.y = -1000;
+          return;
+        }
+        const moved = previousMouse.x === -1000
+          ? 999
+          : Math.hypot(mouse.x - previousMouse.x, mouse.y - previousMouse.y);
+        const now = performance.now();
+        if (moved > 12 && now - lastMouseSparkTime > 42) {
+          scatterMotionSparks(mouse.x, mouse.y, moved);
+          lastMouseSparkTime = now;
+        }
+        previousMouse.x = mouse.x;
+        previousMouse.y = mouse.y;
+      }
+
+      function drawMotionShape(type, x, y, size, color, alpha) {
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.scale(size / 44, size / 44);
+        ctx.globalAlpha = alpha;
+        ctx.strokeStyle = color;
+        ctx.fillStyle = color;
+        ctx.lineWidth = 2.7;
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+
+        switch (type) {
+          case "circle-stroke":
+            ctx.beginPath();
+            ctx.arc(0, 0, 16, 0, Math.PI * 2);
+            ctx.stroke();
+            break;
+          case "split-circle":
+            ctx.beginPath();
+            ctx.arc(0, -2.5, 18, Math.PI, 0);
+            ctx.closePath();
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(0, 2.5, 18, 0, Math.PI);
+            ctx.closePath();
+            ctx.fill();
+            break;
+          case "double-slash":
+            ctx.beginPath();
+            ctx.moveTo(-10, 10);
+            ctx.lineTo(10, -10);
+            ctx.moveTo(0, 10);
+            ctx.lineTo(10, 0);
+            ctx.stroke();
+            break;
+          case "cross-square":
+            ctx.strokeRect(-17, -17, 34, 34);
+            ctx.beginPath();
+            ctx.moveTo(-17, -17);
+            ctx.lineTo(17, 17);
+            ctx.moveTo(17, -17);
+            ctx.lineTo(-17, 17);
+            ctx.stroke();
+            break;
+          case "inverted":
+            ctx.fillRect(-17, -17, 34, 34);
+            ctx.globalCompositeOperation = "destination-out";
+            ctx.beginPath();
+            ctx.arc(0, 0, 11, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.globalCompositeOperation = "source-over";
+            break;
+          case "dot":
+            ctx.beginPath();
+            ctx.arc(0, 0, 6.5, 0, Math.PI * 2);
+            ctx.fill();
+            break;
+          default:
+            break;
+        }
+        ctx.restore();
+      }
+
+      function drawMotionShapes(timestamp) {
+        requestAnimationFrame(drawMotionShapes);
+        const dt = Math.min(0.05, (timestamp - lastTime) / 1000);
+        lastTime = timestamp;
+        const isMotion = projectsScene.dataset.projectShape === "motion" && document.body.classList.contains("projects-ready");
+
+        ctx.clearRect(0, 0, width, height);
+        if (!isMotion || width <= 1 || height <= 1) {
+          previousMouse.x = -1000;
+          previousMouse.y = -1000;
+          mouse.active = false;
+          ripples = [];
+          lastAutoRippleTime = 0;
+          breathStartTime = 0;
+          projectsScene.style.setProperty("--motion-breath", "0px");
+          return;
+        }
+
+        if (lastAutoRippleTime === 0 || timestamp - lastAutoRippleTime > motionSettings.autoRippleInterval) {
+          addCenterMotionRipple(1.08);
+          lastAutoRippleTime = timestamp;
+          breathStartTime = timestamp;
+        }
+
+        const breathProgress = breathStartTime === 0
+          ? 0
+          : clamp((timestamp - breathStartTime) / motionSettings.breathDuration, 0, 1);
+        const breathEase = Math.sin(breathProgress * Math.PI);
+        const breath = breathEase * motionSettings.breathAmount;
+        projectsScene.style.setProperty("--motion-breath", `${breath.toFixed(2)}px`);
+
+        ripples = ripples
+          .map((ripple) => ({
+            ...ripple,
+            radius: ripple.radius + motionSettings.rippleSpeed * dt,
+            intensity: ripple.intensity - motionSettings.fadeSpeed * 0.32 * dt,
+          }))
+          .filter((ripple) => ripple.radius < ripple.maxRadius && ripple.intensity > 0.02);
+
+        for (const cell of cells) {
+          let target = 0;
+
+          for (const ripple of ripples) {
+            const dist = Math.hypot(cell.x - ripple.x, cell.y - ripple.y);
+            const band = Math.abs(dist - ripple.radius);
+            if (band < 58) {
+              target += Math.pow(1 - band / 58, 2) * ripple.intensity;
+            }
+          }
+          const rippleTarget = target;
+          target += cell.spark;
+          cell.spark *= 0.88;
+
+          const onWhite = isPointOnProjectWhite(cell.x, cell.y);
+          const base = onWhite ? 0 : motionSettings.baseLevel;
+          target = clamp(target + base, 0, 1);
+          cell.intensity += (target - cell.intensity) * (target > cell.intensity ? 0.24 : 0.08);
+
+          if (cell.intensity < 0.001) continue;
+          const type = cell.spark > 0.04 && cell.spark >= rippleTarget * 0.72 ? cell.sparkType : "circle-stroke";
+          const color = onWhite ? "#fd0038" : "#ffffff";
+          const size = 22 + cell.intensity * 18;
+          const alpha = clamp(cell.intensity, 0, 1);
+          drawMotionShape(type, cell.x, cell.y, size, color, alpha);
+        }
+      }
+
+      resizeMotionCanvas();
+      new ResizeObserver(resizeMotionCanvas).observe(projectsScene);
+      window.addEventListener("pointermove", updateMotionMouse, { passive: true });
+      window.addEventListener("pointerleave", () => {
+        mouse.active = false;
+      });
+      requestAnimationFrame(drawMotionShapes);
+    }
+
+    initMotionShapeCanvas();
+
+    function initProjectFunEyes() {
+      if (!projectsScene) return;
+      const leftPupil = projectsScene.querySelector(".project-eye-pupil-left");
+      const rightPupil = projectsScene.querySelector(".project-eye-pupil-right");
+      const leftRing = projectsScene.querySelector(".project-eye-ring-left");
+      const rightRing = projectsScene.querySelector(".project-eye-ring-right");
+      const bridge = projectsScene.querySelector(".project-eye-bridge");
+      if (!leftPupil || !rightPupil || !leftRing || !rightRing || !bridge) return;
+      const eyeState = {
+        gazeX: 0,
+        gazeY: 0,
+        fear: 0,
+        targetGazeX: 0,
+        targetGazeY: 0,
+        targetFear: 0,
+      };
+
+      function getProjectEyeCenter() {
+        const leftBox = leftRing.getBoundingClientRect();
+        const rightBox = rightRing.getBoundingClientRect();
+        const centerX = (leftBox.left + leftBox.width / 2 + rightBox.left + rightBox.width / 2) / 2;
+        const centerY = (leftBox.top + leftBox.height / 2 + rightBox.top + rightBox.height / 2) / 2;
+        return { centerX, centerY };
+      }
+
+      function updateProjectEyes(event) {
+        const isEyePage = projectsScene.dataset.projectShape === "fun" || projectsScene.dataset.projectShape === "depth";
+        if (!isEyePage || !document.body.classList.contains("projects-ready")) {
+          eyeState.targetGazeX = 0;
+          eyeState.targetGazeY = 0;
+          eyeState.targetFear = 0;
+          return;
+        }
+        const rect = projectsScene.getBoundingClientRect();
+        const { centerX, centerY } = getProjectEyeCenter();
+        const dx = event.clientX - centerX;
+        const dy = event.clientY - centerY;
+        const distance = Math.max(1, Math.hypot(dx, dy));
+        const minSide = Math.min(rect.width, rect.height);
+        const lookStrength = clamp(distance / (minSide * 0.18), 0.2, 1);
+        const bodyRadius = minSide * (projectsScene.dataset.projectShape === "depth" ? 0.16 : 0.22);
+        const fear = clamp(1 - distance / bodyRadius, 0, 1);
+        eyeState.targetGazeX = (dx / distance) * (72 + fear * 28) * lookStrength;
+        eyeState.targetGazeY = (dy / distance) * (54 + fear * 22) * lookStrength;
+        eyeState.targetFear = fear;
+      }
+
+      function tickProjectEyes(timestamp) {
+        requestAnimationFrame(tickProjectEyes);
+        const isEyePage = projectsScene.dataset.projectShape === "fun" || projectsScene.dataset.projectShape === "depth";
+        if (!isEyePage || !document.body.classList.contains("projects-ready")) {
+          eyeState.targetGazeX = 0;
+          eyeState.targetGazeY = 0;
+          eyeState.targetFear = 0;
+        }
+        eyeState.gazeX += (eyeState.targetGazeX - eyeState.gazeX) * 0.38;
+        eyeState.gazeY += (eyeState.targetGazeY - eyeState.gazeY) * 0.38;
+        eyeState.fear += (eyeState.targetFear - eyeState.fear) * 0.36;
+
+        const gazeDistance = Math.hypot(eyeState.gazeX, eyeState.gazeY);
+        const shake = eyeState.fear > 0.04 ? Math.sin(timestamp * 0.095) * eyeState.fear * 4.6 : 0;
+        const ringX = eyeState.gazeX * 0.52 + shake;
+        const ringY = eyeState.gazeY * 0.44;
+        const pupilScale = clamp(1.22 + eyeState.fear * 1.08 - Math.min(0.58, gazeDistance / 150), 0.5, 2.28);
+        const ringScale = 1 + eyeState.fear * 0.1;
+        const cross = eyeState.fear * 48;
+        const pullY = eyeState.fear * -9;
+
+        leftRing.style.transform = `translate(${(ringX - eyeState.fear * 7).toFixed(1)}px, ${(ringY + pullY).toFixed(1)}px) scale(${ringScale.toFixed(3)})`;
+        rightRing.style.transform = `translate(${(ringX + eyeState.fear * 7).toFixed(1)}px, ${(ringY + pullY).toFixed(1)}px) scale(${ringScale.toFixed(3)})`;
+        bridge.style.transform = `translate(${ringX.toFixed(1)}px, ${(ringY + pullY).toFixed(1)}px) scale(${(1 + eyeState.fear * 0.34).toFixed(3)}, ${(1 + eyeState.fear * 0.12).toFixed(3)})`;
+        leftPupil.style.transform = `translate(${(eyeState.gazeX * 1.15 + cross + shake).toFixed(1)}px, ${(eyeState.gazeY * 1.1 + pullY).toFixed(1)}px) scale(${pupilScale.toFixed(3)})`;
+        rightPupil.style.transform = `translate(${(eyeState.gazeX * 1.15 - cross + shake).toFixed(1)}px, ${(eyeState.gazeY * 1.1 + pullY).toFixed(1)}px) scale(${pupilScale.toFixed(3)})`;
+      }
+
+      window.addEventListener("pointermove", updateProjectEyes, { passive: true });
+      requestAnimationFrame(tickProjectEyes);
+    }
+
+    initProjectFunEyes();
+
+    function initProjectMarquee() {
+      if (!projectsScene || !projectMarqueeTrack || !projectMarqueeRedTrack) return;
+      const phrase = "My design philosophy 熙穆的设计怎么来";
+      const repeatedText = `${phrase}${phrase}${phrase}${phrase}${phrase}${phrase}`;
+      projectMarqueeTrack.innerHTML = "";
+      projectMarqueeRedTrack.innerHTML = "";
+      const isCjkChar = (char) => /[\u3400-\u9fff]/.test(char);
+      function createChar(track, char) {
+        const span = document.createElement("span");
+        span.className = `project-marquee-char${char === " " ? " is-space" : ""}${isCjkChar(char) ? " is-cjk" : ""}`;
+        span.textContent = char === " " ? "\u00A0" : char;
+        track.appendChild(span);
+        return span;
+      }
+      const chars = Array.from(repeatedText).map((char) => createChar(projectMarqueeTrack, char));
+      const redChars = Array.from(repeatedText).map((char) => createChar(projectMarqueeRedTrack, char));
+      let lastTimestamp = performance.now();
+      let offset = 0;
+      let metrics = [];
+      let totalWidth = 1;
+
+      function measureChars() {
+        let cursor = 0;
+        metrics = chars.map((char) => {
+          const width = Math.max(10, char.offsetWidth);
+          const isSpace = char.classList.contains("is-space");
+          const isCjk = char.classList.contains("is-cjk");
+          const advance = width + (isSpace ? 9 : (isCjk ? -4 : 1));
+          const metric = { baseX: cursor, width, advance };
+          cursor += advance;
+          return metric;
+        });
+        totalWidth = Math.max(cursor, 1);
+      }
+
+      measureChars();
+
+      function tickProjectMarquee(timestamp) {
+        requestAnimationFrame(tickProjectMarquee);
+        const dt = Math.min(50, timestamp - lastTimestamp);
+        lastTimestamp = timestamp;
+
+        const rect = projectsScene.getBoundingClientRect();
+        if (rect.width <= 1 || rect.height <= 1) return;
+        if (metrics.length !== chars.length || totalWidth <= 1) {
+          measureChars();
+        }
+        const speed = Math.max(78, rect.width * 0.095);
+        offset = (offset + speed * dt / 1000) % totalWidth;
+
+        chars.forEach((char, index) => {
+          const metric = metrics[index];
+          const rawX = metric.baseX - offset;
+          const x = ((rawX + rect.width + totalWidth) % totalWidth) - rect.width * 0.5;
+          const xValue = `${x.toFixed(2)}px`;
+          char.style.setProperty("--marquee-x", xValue);
+          redChars[index]?.style.setProperty("--marquee-x", xValue);
+        });
+      }
+
+      window.addEventListener("resize", measureChars);
+      requestAnimationFrame(tickProjectMarquee);
+    }
+
+    initProjectMarquee();
+
+    function initProjectOrbStarCycle() {
+      if (!projectsScene || !projectOrbStarLayer) return;
+      let cycleTimer = null;
+
+      function pulseProjectHalf(half, duration = 640) {
+        if (!half || projectsScene.dataset.projectShape !== "base" || !document.body.classList.contains("projects-ready")) return;
+        half.classList.remove("is-glowing");
+        void half.getBoundingClientRect();
+        half.classList.add("is-glowing");
+        window.setTimeout(() => {
+          half.classList.remove("is-glowing");
+        }, duration);
+      }
+
+      function clearProjectParticles() {
+        projectOrbStarLayer.querySelectorAll(".project-orb, .project-star").forEach((node) => node.remove());
+        projectHalfTop?.classList.remove("is-glowing");
+        projectHalfBottom?.classList.remove("is-glowing");
+      }
+
+      function spawnProjectCycle() {
+        if (projectsScene.dataset.projectShape !== "base" || !document.body.classList.contains("projects-ready")) {
+          clearProjectParticles();
+          cycleTimer = window.setTimeout(spawnProjectCycle, 360);
+          return;
+        }
+
+        const orb = document.createElement("span");
+        orb.className = "project-orb";
+        projectOrbStarLayer.appendChild(orb);
+        orb.addEventListener("animationend", () => {
+          orb.remove();
+        }, { once: true });
+
+        window.setTimeout(() => {
+          pulseProjectHalf(projectHalfTop, 720);
+        }, 1050);
+
+        window.setTimeout(() => {
+          if (projectsScene.dataset.projectShape !== "base" || !document.body.classList.contains("projects-ready")) return;
+          pulseProjectHalf(projectHalfBottom, 760);
+          const star = document.createElement("img");
+          const shapeIndex = Math.floor(Math.random() * 5);
+          star.className = "project-star";
+          star.src = `网站素材/stars/star-${shapeIndex + 1}.svg`;
+          star.alt = "";
+          star.style.left = "50%";
+          projectOrbStarLayer.appendChild(star);
+          star.addEventListener("animationend", () => star.remove(), { once: true });
+        }, 2700);
+
+        cycleTimer = window.setTimeout(spawnProjectCycle, 5200);
+      }
+
+      spawnProjectCycle();
+      window.addEventListener("beforeunload", () => {
+        if (cycleTimer) window.clearTimeout(cycleTimer);
+      });
+    }
+
+    initProjectOrbStarCycle();
+
+    // 首轮自适应尺寸及横竖屏重载监听
+    window.addEventListener("resize", () => {
+      initGrid();
+      updatePageScrollState();
+      renderSiteCursor();
+    });
+    
+    // 初始化并启动
+    initGrid();
+    updatePageScrollState();
+    requestAnimationFrame(updatePhysics);
+  </script>
+</body>
+</html>
