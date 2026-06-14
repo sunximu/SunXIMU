@@ -53,6 +53,7 @@
       --project-list-content: 0;
       --project-list-base-opacity: 0;
       --project-list-final-opacity: 0;
+      --project-list-gallery: 0;
     }
 
     html {
@@ -1120,6 +1121,7 @@
       pointer-events: none;
       transform: translate3d(0, var(--project-list-y), 0);
       will-change: opacity, transform;
+      isolation: isolate;
     }
 
     body.project-list-ready .project-list-scene {
@@ -1283,6 +1285,275 @@
       text-stroke: clamp(1px, .28vw, 3.5px) rgba(253, 0, 56, 0.1);
     }
 
+    .project-list-gallery-scroll {
+      position: absolute;
+      inset: 0;
+      z-index: 5;
+      overflow-x: hidden;
+      overflow-y: auto;
+      opacity: var(--project-list-gallery);
+      pointer-events: none;
+      overscroll-behavior: contain;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+      will-change: opacity;
+    }
+
+    .project-list-gallery-scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    body.project-list-gallery-ready .project-list-gallery-scroll {
+      pointer-events: auto;
+    }
+
+    body.project-detail-open .project-list-gallery-scroll {
+      pointer-events: none;
+    }
+
+    .project-list-gallery-grid {
+      position: relative;
+      min-height: 218vh;
+      padding:
+        clamp(112px, 13vh, 164px)
+        clamp(32px, 4.2vw, 72px)
+        clamp(180px, 18vh, 260px);
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      grid-auto-rows: minmax(188px, auto);
+      column-gap: clamp(20px, 2.4vw, 48px);
+      row-gap: clamp(48px, 6.8vh, 92px);
+      align-items: center;
+      justify-items: center;
+    }
+
+    .project-thumb {
+      grid-column: var(--thumb-col);
+      grid-row: var(--thumb-row);
+      position: relative;
+      z-index: 2;
+      width: min(var(--thumb-width, 190px), calc(100% - 8px));
+      margin: 0;
+      opacity: 0;
+      transform: translate3d(var(--thumb-x, 0px), calc(var(--thumb-y, 0px) + 26px), 0) scale(.72);
+      transform-origin: 50% 50%;
+      will-change: transform, opacity;
+      pointer-events: none;
+      cursor: pointer;
+    }
+
+    body.project-list-gallery-ready .project-thumb {
+      opacity: 1;
+      transform: translate3d(var(--thumb-x, 0px), var(--thumb-y, 0px), 0) scale(1);
+      animation: project-thumb-grow 760ms cubic-bezier(.16, 1, .22, 1) both;
+      animation-delay: var(--thumb-delay, 0ms);
+      pointer-events: auto;
+    }
+
+    @keyframes project-thumb-grow {
+      0% {
+        opacity: 0;
+        transform: translate3d(var(--thumb-x, 0px), calc(var(--thumb-y, 0px) + 26px), 0) scale(.72);
+      }
+      100% {
+        opacity: 1;
+        transform: translate3d(var(--thumb-x, 0px), var(--thumb-y, 0px), 0) scale(1);
+      }
+    }
+
+    .project-thumb img {
+      display: block;
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+      object-position: center;
+      user-select: none;
+      -webkit-user-drag: none;
+      pointer-events: none;
+      transform: scale(1);
+      transform-origin: center;
+      transition: transform 240ms cubic-bezier(.2, .8, .2, 1), filter 240ms cubic-bezier(.2, .8, .2, 1);
+      filter: drop-shadow(0 0 0 rgba(0, 0, 0, 0));
+      will-change: transform, filter;
+    }
+
+    body.project-list-gallery-ready .project-thumb:hover img {
+      transform: scale(1.08);
+      filter: drop-shadow(0 18px 24px rgba(0, 0, 0, .18));
+    }
+
+    .project-detail-shell {
+      position: absolute;
+      z-index: 64;
+      inset:
+        clamp(78px, 10vh, 96px)
+        clamp(56px, 4.4vw, 72px)
+        clamp(52px, 6vh, 70px);
+      display: grid;
+      grid-template-columns: minmax(240px, clamp(260px, 24vw, 320px)) minmax(0, 1fr);
+      gap: clamp(28px, 2.6vw, 38px);
+      opacity: 0;
+      pointer-events: none;
+      transform: translate3d(0, 20px, 0) scale(.985);
+      transition:
+        opacity 360ms cubic-bezier(.2, .8, .2, 1),
+        transform 460ms cubic-bezier(.16, 1, .22, 1);
+      will-change: opacity, transform;
+    }
+
+    body.project-detail-open .project-detail-shell {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+
+    .project-detail-panel {
+      position: relative;
+      min-width: 0;
+      min-height: 0;
+      border: .8px solid #fd0038;
+      border-radius: 24px;
+      background: rgba(255, 255, 255, .9);
+      box-shadow: 14px 18px 18px rgba(0, 0, 0, .18);
+      overflow: hidden;
+    }
+
+    .project-detail-info {
+      padding: clamp(26px, 3vw, 42px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .project-detail-thumb-wrap {
+      width: 100%;
+      min-height: clamp(130px, 19vh, 190px);
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+    }
+
+    .project-detail-thumb {
+      display: block;
+      max-width: 92%;
+      max-height: clamp(120px, 18vh, 180px);
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      object-position: center top;
+    }
+
+    .project-detail-meta {
+      width: 100%;
+      margin-top: auto;
+      padding-bottom: clamp(18px, 2.8vh, 30px);
+      color: #111;
+      font-family: "PingFang SC", "PingFang TC", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-weight: 300;
+      text-align: center;
+      letter-spacing: 0;
+    }
+
+    .project-detail-title {
+      margin: 0 0 7px;
+      font-family: "Songti SC", "STSong", "SimSun", serif;
+      font-size: clamp(30px, 3.15vw, 46px);
+      font-weight: 700;
+      line-height: 1.06;
+      text-align: center;
+      word-break: keep-all;
+      overflow-wrap: normal;
+    }
+
+    .project-detail-shell[data-project="计算机设计史"] .project-detail-title {
+      transform: translateX(-0.18em);
+    }
+
+    .project-detail-subtitle-cn,
+    .project-detail-subtitle-en,
+    .project-detail-info-cn,
+    .project-detail-info-en {
+      margin: 0;
+      font-family: "PingFang SC", "PingFang TC", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-weight: 300;
+      line-height: 1.22;
+      word-break: keep-all;
+      overflow-wrap: normal;
+    }
+
+    .project-detail-subtitle-cn {
+      font-size: clamp(16px, 1.45vw, 22px);
+    }
+
+    .project-detail-subtitle-en {
+      font-size: clamp(13px, 1.06vw, 17px);
+      white-space: pre-line;
+      word-break: normal;
+      hyphens: none;
+    }
+
+    .project-detail-info-cn {
+      margin-top: clamp(26px, 3.8vh, 42px);
+      font-size: clamp(13px, 1.08vw, 17px);
+    }
+
+    .project-detail-info-en {
+      margin-top: 6px;
+      font-size: clamp(11px, .92vw, 14px);
+      line-height: 1.35;
+      white-space: pre-line;
+      word-break: normal;
+      hyphens: none;
+    }
+
+    .project-detail-meta [hidden] {
+      display: none;
+    }
+
+    .project-detail-shell[data-project="莲湖品牌识别"] .project-detail-thumb,
+    .project-detail-shell[data-project="塔罗牌"] .project-detail-thumb,
+    .project-detail-shell[data-project="ventessa"] .project-detail-thumb,
+    .project-detail-shell[data-project="赤尾"] .project-detail-thumb,
+    .project-detail-shell[data-project="秦矩"] .project-detail-thumb,
+    .project-detail-shell[data-project="龙王村"] .project-detail-thumb,
+    .project-detail-shell[data-project="chinagoose"] .project-detail-thumb,
+    .project-detail-shell[data-project="计算机设计史"] .project-detail-thumb,
+    .project-detail-shell[data-project="the life"] .project-detail-thumb {
+      max-width: 116%;
+      max-height: clamp(164px, 24vh, 250px);
+    }
+
+    .project-detail-content {
+      padding: clamp(34px, 3.6vw, 52px);
+    }
+
+    .project-detail-back {
+      position: absolute;
+      top: clamp(16px, 2.1vh, 22px);
+      right: clamp(18px, 2vw, 26px);
+      z-index: 2;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: #fd0038;
+      font-family: "HYMacH7", "PingFang TC", "PingFang SC", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: clamp(22px, 2.4vw, 31px);
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    .project-detail-back:hover {
+      transform: scale(1.04);
+    }
+
+    .project-thumb-wide {
+      width: min(var(--thumb-width, 260px), calc(100% - 8px));
+    }
+
+    .project-thumb-tall {
+      width: min(var(--thumb-width, 160px), calc(100% - 8px));
+    }
+
     @media (max-width: 760px) {
       .project-list-sun,
       .project-list-ximu {
@@ -1295,6 +1566,39 @@
 
       .project-list-title {
         font-size: clamp(96px, 27vw, 172px);
+      }
+
+      .project-list-gallery-grid {
+        min-height: 246vh;
+        padding:
+          clamp(108px, 14vh, 148px)
+          18px
+          clamp(160px, 16vh, 220px);
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-auto-rows: minmax(128px, auto);
+        column-gap: 14px;
+        row-gap: 22px;
+      }
+
+      .project-thumb {
+        grid-column: span 1 !important;
+        width: min(var(--thumb-mobile-width, 74%), calc(100% - 6px));
+        transform: translate3d(0, 18px, 0) scale(.74);
+      }
+
+      body.project-list-gallery-ready .project-thumb {
+      transform: translate3d(0, 0, 0) scale(1);
+      }
+
+      .project-detail-shell {
+        inset: 92px 18px 28px;
+        grid-template-columns: 1fr;
+        grid-template-rows: minmax(180px, .8fr) minmax(320px, 1.5fr);
+        gap: 18px;
+      }
+
+      .project-detail-panel {
+        border-radius: 18px;
       }
     }
 
@@ -2405,6 +2709,106 @@
         <p class="project-list-item project-list-title">Projects</p>
       </div>
     </div>
+    <div class="project-list-gallery-scroll" aria-label="projects thumbnails">
+      <div class="project-list-gallery-grid">
+        <figure class="project-thumb project-thumb-wide" style="--thumb-col:1;--thumb-row:1;--thumb-width:178px;--thumb-mobile-width:72%;--thumb-x:0px;--thumb-y:6px;--thumb-delay:0ms;">
+          <img src="网站素材/作品缩略图/器度.png" alt="器度">
+        </figure>
+        <figure class="project-thumb" style="--thumb-col:2;--thumb-row:1;--thumb-width:166px;--thumb-mobile-width:66%;--thumb-x:-8px;--thumb-y:-8px;--thumb-delay:40ms;">
+          <img src="网站素材/作品缩略图/扎染.png" alt="云南扎染">
+        </figure>
+        <figure class="project-thumb project-thumb-wide" style="--thumb-col:3;--thumb-row:1;--thumb-width:224px;--thumb-mobile-width:84%;--thumb-x:-4px;--thumb-y:2px;--thumb-delay:80ms;">
+          <img src="网站素材/作品缩略图/西仓食集.png" alt="西仓食集">
+        </figure>
+        <figure class="project-thumb project-thumb-tall" style="--thumb-col:4;--thumb-row:1;--thumb-width:178px;--thumb-mobile-width:66%;--thumb-x:2px;--thumb-y:-8px;--thumb-delay:120ms;">
+          <img src="网站素材/作品缩略图/教材.png" alt="教材">
+        </figure>
+        <figure class="project-thumb" style="--thumb-col:5;--thumb-row:1;--thumb-width:210px;--thumb-mobile-width:88%;--thumb-x:4px;--thumb-y:-4px;--thumb-delay:160ms;">
+          <img src="网站素材/作品缩略图/翼动秦岭.png" alt="翼动秦岭">
+        </figure>
+
+        <figure class="project-thumb project-thumb-wide" style="--thumb-col:1;--thumb-row:2;--thumb-width:194px;--thumb-mobile-width:76%;--thumb-x:0px;--thumb-y:-6px;--thumb-delay:70ms;">
+          <img src="网站素材/作品缩略图/非遗可视化.png" alt="非遗可视化">
+        </figure>
+        <figure class="project-thumb" style="--thumb-col:2;--thumb-row:2;--thumb-width:170px;--thumb-mobile-width:70%;--thumb-x:-4px;--thumb-y:0px;--thumb-delay:110ms;">
+          <img src="网站素材/作品缩略图/秦岭四宝.png" alt="秦岭四宝">
+        </figure>
+        <figure class="project-thumb project-thumb-wide" style="--thumb-col:3;--thumb-row:2;--thumb-width:184px;--thumb-mobile-width:68%;--thumb-x:-2px;--thumb-y:0px;--thumb-delay:150ms;">
+          <img src="网站素材/作品缩略图/个人网站.png" alt="个人网站">
+        </figure>
+        <figure class="project-thumb project-thumb-wide" style="--thumb-col:4;--thumb-row:2;--thumb-width:182px;--thumb-mobile-width:76%;--thumb-x:6px;--thumb-y:2px;--thumb-delay:190ms;">
+          <img src="网站素材/作品缩略图/游圆体.png" alt="游圆体">
+        </figure>
+        <figure class="project-thumb project-thumb-wide" style="--thumb-col:5;--thumb-row:2;--thumb-width:232px;--thumb-mobile-width:92%;--thumb-x:4px;--thumb-y:2px;--thumb-delay:230ms;">
+          <img src="网站素材/作品缩略图/莲湖品牌识别.png" alt="莲湖品牌识别">
+        </figure>
+
+        <figure class="project-thumb" style="--thumb-col:1;--thumb-row:3;--thumb-width:174px;--thumb-mobile-width:72%;--thumb-x:0px;--thumb-y:0px;--thumb-delay:140ms;">
+          <img src="网站素材/作品缩略图/旅行者一号.png" alt="旅行者一号">
+        </figure>
+        <figure class="project-thumb project-thumb-tall" style="--thumb-col:2;--thumb-row:3;--thumb-width:182px;--thumb-mobile-width:72%;--thumb-x:-4px;--thumb-y:0px;--thumb-delay:180ms;">
+          <img src="网站素材/作品缩略图/塔罗牌.png" alt="塔罗牌">
+        </figure>
+        <figure class="project-thumb" style="--thumb-col:3;--thumb-row:3;--thumb-width:178px;--thumb-mobile-width:74%;--thumb-x:0px;--thumb-y:0px;--thumb-delay:220ms;">
+          <img src="网站素材/作品缩略图/ventessa.png" alt="ventessa">
+        </figure>
+        <figure class="project-thumb" style="--thumb-col:4;--thumb-row:3;--thumb-width:166px;--thumb-mobile-width:68%;--thumb-x:4px;--thumb-y:0px;--thumb-delay:260ms;">
+          <img src="网站素材/作品缩略图/交大统战.png" alt="交大统战">
+        </figure>
+        <figure class="project-thumb project-thumb-wide" style="--thumb-col:5;--thumb-row:3;--thumb-width:184px;--thumb-mobile-width:74%;--thumb-x:2px;--thumb-y:0px;--thumb-delay:300ms;">
+          <img src="网站素材/作品缩略图/赤尾.png" alt="赤尾">
+        </figure>
+
+        <figure class="project-thumb" style="--thumb-col:1;--thumb-row:4;--thumb-width:166px;--thumb-mobile-width:70%;--thumb-x:0px;--thumb-y:-2px;--thumb-delay:210ms;">
+          <img src="网站素材/作品缩略图/二四茶饮.png" alt="二四茶饮">
+        </figure>
+        <figure class="project-thumb project-thumb-tall" style="--thumb-col:2;--thumb-row:4;--thumb-width:188px;--thumb-mobile-width:74%;--thumb-x:-6px;--thumb-y:8px;--thumb-delay:250ms;">
+          <img src="网站素材/作品缩略图/秦矩.png" alt="秦矩">
+        </figure>
+        <figure class="project-thumb" style="--thumb-col:3;--thumb-row:4;--thumb-width:166px;--thumb-mobile-width:70%;--thumb-x:2px;--thumb-y:4px;--thumb-delay:290ms;">
+          <img src="网站素材/作品缩略图/敦煌藻井.png" alt="敦煌藻井">
+        </figure>
+        <figure class="project-thumb" style="--thumb-col:4;--thumb-row:4;--thumb-width:220px;--thumb-mobile-width:88%;--thumb-x:6px;--thumb-y:0px;--thumb-delay:330ms;">
+          <img src="网站素材/作品缩略图/龙王村.png" alt="龙王村">
+        </figure>
+        <figure class="project-thumb project-thumb-tall" style="--thumb-col:5;--thumb-row:4;--thumb-width:126px;--thumb-mobile-width:52%;--thumb-x:2px;--thumb-y:-4px;--thumb-delay:370ms;">
+          <img src="网站素材/作品缩略图/校训字体.png" alt="校训字体">
+        </figure>
+
+        <figure class="project-thumb" style="--thumb-col:1;--thumb-row:5;--thumb-width:166px;--thumb-mobile-width:68%;--thumb-x:0px;--thumb-y:4px;--thumb-delay:280ms;">
+          <img src="网站素材/作品缩略图/计算机设计史.png" alt="计算机设计史">
+        </figure>
+        <figure class="project-thumb project-thumb-wide" style="--thumb-col:2;--thumb-row:5;--thumb-width:206px;--thumb-mobile-width:84%;--thumb-x:-4px;--thumb-y:0px;--thumb-delay:320ms;">
+          <img src="网站素材/作品缩略图/往生诗集.png" alt="往生诗集">
+        </figure>
+        <figure class="project-thumb" style="--thumb-col:3;--thumb-row:5;--thumb-width:190px;--thumb-mobile-width:76%;--thumb-x:0px;--thumb-y:8px;--thumb-delay:360ms;">
+          <img src="网站素材/作品缩略图/the life.png" alt="the life">
+        </figure>
+        <figure class="project-thumb" style="--thumb-col:4;--thumb-row:5;--thumb-width:198px;--thumb-mobile-width:82%;--thumb-x:4px;--thumb-y:-2px;--thumb-delay:400ms;">
+          <img src="网站素材/作品缩略图/chinagooese.png" alt="chinagoose">
+        </figure>
+        <figure class="project-thumb" style="--thumb-col:5;--thumb-row:5;--thumb-width:156px;--thumb-mobile-width:64%;--thumb-x:2px;--thumb-y:6px;--thumb-delay:440ms;">
+          <img src="网站素材/作品缩略图/花萼灯.png" alt="花萼灯">
+        </figure>
+      </div>
+    </div>
+    <div class="project-detail-shell" aria-hidden="true">
+      <aside class="project-detail-panel project-detail-info" aria-label="作品介绍">
+        <div class="project-detail-thumb-wrap">
+          <img class="project-detail-thumb" src="" alt="">
+        </div>
+        <div class="project-detail-meta" aria-live="polite">
+          <h2 class="project-detail-title"></h2>
+          <p class="project-detail-subtitle-cn"></p>
+          <p class="project-detail-subtitle-en"></p>
+          <p class="project-detail-info-cn"></p>
+          <p class="project-detail-info-en"></p>
+        </div>
+      </aside>
+      <article class="project-detail-panel project-detail-content" aria-label="作品内容">
+        <button class="project-detail-back" type="button" data-cursor-target>Back</button>
+      </article>
+    </div>
   </section>
 
   <div class="site-cursor" aria-hidden="true">
@@ -3172,6 +3576,16 @@
     const portraitFaceHotspot = document.querySelector(".portrait-face-hotspot");
     const projectsScene = document.querySelector(".projects-scene");
     const projectListScene = document.querySelector(".project-list-scene");
+    const projectListGalleryScroll = document.querySelector(".project-list-gallery-scroll");
+    const projectThumbs = document.querySelectorAll(".project-thumb");
+    const projectDetailShell = document.querySelector(".project-detail-shell");
+    const projectDetailThumb = document.querySelector(".project-detail-thumb");
+    const projectDetailTitle = document.querySelector(".project-detail-title");
+    const projectDetailSubtitleCn = document.querySelector(".project-detail-subtitle-cn");
+    const projectDetailSubtitleEn = document.querySelector(".project-detail-subtitle-en");
+    const projectDetailInfoCn = document.querySelector(".project-detail-info-cn");
+    const projectDetailInfoEn = document.querySelector(".project-detail-info-en");
+    const projectDetailBack = document.querySelector(".project-detail-back");
     const projectMarqueeTrack = document.querySelector(".project-marquee-track");
     const projectMarqueeRedTrack = document.querySelector(".project-marquee-red-track");
     const whoLinks = document.querySelectorAll('a[href="#identity"]');
@@ -3202,9 +3616,40 @@
     let informationDetailTimer = null;
     let scrollSnapTimer = null;
     let projectListReplayTimer = null;
+    let projectListGalleryTimer = null;
+    let projectListExitWheel = 0;
+    let projectListExitWheelTime = 0;
+    let wasProjectListSettled = false;
     let wasProjectListReady = false;
     const projectShapeStates = ["quiet", "motion", "fun", "depth", "base"];
     let projectShapeIndex = -1;
+    const projectDetails = {
+      "器度": { title: "器度", subtitleCn: "博物馆中的日常智慧", subtitleEn: "Everyday Wisdom From The Musume", infoCn: "展览策划 团队作品 大三", infoEn: "Exhibition Curation\nTeam Project Junior Year" },
+      "云南扎染": { title: "扎染空间", subtitleCn: "", subtitleEn: "Tie-Dye Space", infoCn: "3D建模设计 个人作品 大三", infoEn: "3D Modeling Design\nPersonal Work Junior Year" },
+      "西仓食集": { title: "满仓美味", subtitleCn: "西仓食集策划", subtitleEn: "All In Delicious", infoCn: "全案设计 个人作品 大三", infoEn: "Full-case Design Junior Year" },
+      "教材": { title: "教材", subtitleCn: "", subtitleEn: "Childhood Prose", infoCn: "书籍装帧设计 个人作品 大三", infoEn: "Book Design Junior Year" },
+      "翼动秦岭": { title: "翼动秦岭", subtitleCn: "生态主题展", subtitleEn: "Protect Every Feather Preserve The Mountains", infoCn: "展览策划 团队作品 大三", infoEn: "Exhibition Curation\nTeam Project Junior Year" },
+      "非遗可视化": { title: "非遗地图", subtitleCn: "山西国家非遗视觉设计研究", subtitleEn: "Intangible Cultural Heritage Map", infoCn: "综合设计 团队作品 大三", infoEn: "Integrated Design\nTeam Project Junior Year" },
+      "秦岭四宝": { title: "秦岭四宝", subtitleCn: "", subtitleEn: "Four Treasures of Qinling", infoCn: "产品设计 包装设计 大三", infoEn: "Product Design Packaging Design Junior Year" },
+      "个人网站": { title: "熙穆", subtitleCn: "", subtitleEn: "Ximu", infoCn: "网站设计 个人作品 大三", infoEn: "Website Design Personal Work Junior Year" },
+      "游圆体": { title: "游圆体", subtitleCn: "", subtitleEn: "Youyuan Typeface", infoCn: "字体设计 个人作品 大二", infoEn: "Typeface Design Personal Work Sophomore Year" },
+      "莲湖品牌识别": { title: "莲湖文旅", subtitleCn: "", subtitleEn: "Lianhu Culture & Tourism", infoCn: "LOGO设计 个人作品 大三", infoEn: "Logo Design Personal Work Junior Year" },
+      "旅行者一号": { title: "旅行者II", subtitleCn: "", subtitleEn: "Voyager II", infoCn: "网站设计 团队作品 大三", infoEn: "Website Design Team Project Junior Year" },
+      "塔罗牌": { title: "克莱因塔罗", subtitleCn: "", subtitleEn: "Klein Tarot", infoCn: "卡牌设计 个人作品 大二", infoEn: "Card Design Personal Work Sophomore Year" },
+      "ventessa": { title: "Ventessa", subtitleCn: "", subtitleEn: "", infoCn: "工业设计 团队作品 大三", infoEn: "Industrial Design Team Project Junior Year" },
+      "交大统战": { title: "交大统战", subtitleCn: "", subtitleEn: "JTU United Front", infoCn: "LOGO设计 个人作品 大三", infoEn: "Logo Design Personal Work Junior Year" },
+      "赤尾": { title: "理想状态", subtitleCn: "赤尾避孕套", subtitleEn: "ZIOXX\nIdeal State", infoCn: "广告设计 团队作品 大三", infoEn: "Advertising Design Team Project Junior Year" },
+      "二四茶饮": { title: "二四茶饮", subtitleCn: "", subtitleEn: "24 Tea", infoCn: "信息可视化设计 个人作品 大二", infoEn: "Information Visualization Design Personal Work Sophomore Year" },
+      "秦矩": { title: "秦矩", subtitleCn: "", subtitleEn: "Qinju", infoCn: "小程序设计 团队作品 大二", infoEn: "Mini Program Design Team Project Sophomore Year" },
+      "敦煌藻井": { title: "万重山", subtitleCn: "", subtitleEn: "Myriad Mountains", infoCn: "3D纹样设计 个人作品 大二", infoEn: "3D Pattern Design Personal Work Sophomore Year" },
+      "龙王村": { title: "龙王村IP", subtitleCn: "", subtitleEn: "Dragon King Village IP", infoCn: "IP设计 团队作品 大一", infoEn: "IP Design Team Project Freshman Year" },
+      "校训字体": { title: "篆", subtitleCn: "", subtitleEn: "Seal Script", infoCn: "字体设计 团队作品 大二", infoEn: "Typeface Design Team Project Sophomore Year" },
+      "计算机设计史": { title: "计算机设计史", subtitleCn: "", subtitleEn: "History of Computer Design", infoCn: "书籍装帧设计 个人作品 大二", infoEn: "Book Design Personal Work Sophomore Year" },
+      "往生诗集": { title: "往生诗集", subtitleCn: "", subtitleEn: "SONGs of BEYOND", infoCn: "装帧设计 个人作品 大一", infoEn: "Book Design Personal Work Freshman Year" },
+      "the life": { title: "The Life", subtitleCn: "", subtitleEn: "", infoCn: "短片设计 个人作品 大一", infoEn: "Short Film Design Personal Work Freshman Year" },
+      "chinagoose": { title: "China Goose", subtitleCn: "", subtitleEn: "", infoCn: "品牌设计 大一", infoEn: "Brand Design Freshman Year" },
+      "花萼灯": { title: "花萼台楼\n镬耳云灯", subtitleCn: "", subtitleEn: "Hua'e Terrace Tower Huo'er Cloud Lantern", infoCn: "产品设计 大二", infoEn: "Product Design Sophomore Year" },
+    };
     const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
     const smoothstep = (edge0, edge1, value) => {
       const t = clamp((value - edge0) / (edge1 - edge0), 0, 1);
@@ -3232,6 +3677,7 @@
       const projectListCover = smoothstep(3.04, 3.48, pageProgress);
       const projectListContent = smoothstep(3.34, 3.68, pageProgress);
       const projectListFinal = smoothstep(3.70, 3.98, pageProgress);
+      const projectListGallery = smoothstep(3.98, 4.00, pageProgress);
       const identityExitProgress = smoothstep(1.05, 1.72, pageProgress);
       const bgProgress = smoothstep(0.44, 0.92, progress);
       const projectListBgProgress = smoothstep(3.34, 3.58, pageProgress);
@@ -3274,17 +3720,22 @@
       root.style.setProperty("--project-list-final", projectListFinal.toFixed(3));
       root.style.setProperty("--project-list-base-opacity", `${(projectListContent * (1 - projectListFinal)).toFixed(3)}`);
       root.style.setProperty("--project-list-final-opacity", `${(projectListContent * projectListFinal).toFixed(3)}`);
+      root.style.setProperty("--project-list-gallery", projectListGallery.toFixed(3));
 
       document.body.classList.toggle("nav-ready", navProgress > 0.6);
       document.body.classList.toggle("identity-ready", identityProgress > 0.45 && informationProgress < 0.8);
       document.body.classList.toggle("information-ready", informationProgress > 0.55 && projectsProgress < 0.8);
       document.body.classList.toggle("projects-ready", projectsProgress > 0.55 && projectListProgress < 0.65);
       const isProjectListReady = projectListProgress > 0.55;
+      const isProjectListSettled = pageProgress > 3.985;
       document.body.classList.toggle("project-list-ready", isProjectListReady);
       if (isProjectListReady && !wasProjectListReady) {
         if (projectListReplayTimer) {
           window.clearTimeout(projectListReplayTimer);
           projectListReplayTimer = null;
+        }
+        if (projectListGalleryScroll) {
+          projectListGalleryScroll.scrollTop = 0;
         }
         document.body.classList.remove("project-list-color-replay");
         void document.body.offsetWidth;
@@ -3295,7 +3746,27 @@
           projectListReplayTimer = null;
         }
         document.body.classList.remove("project-list-color-replay");
+        closeProjectDetail();
       }
+      if (isProjectListSettled && !wasProjectListSettled) {
+        document.body.classList.remove("project-list-gallery-ready");
+        if (projectListGalleryTimer) {
+          window.clearTimeout(projectListGalleryTimer);
+        }
+        projectListGalleryTimer = window.setTimeout(() => {
+          if ((window.scrollY / getScrollDistance()) > 3.985) {
+            document.body.classList.add("project-list-gallery-ready");
+          }
+          projectListGalleryTimer = null;
+        }, 1000);
+      } else if (!isProjectListSettled && wasProjectListSettled) {
+        if (projectListGalleryTimer) {
+          window.clearTimeout(projectListGalleryTimer);
+          projectListGalleryTimer = null;
+        }
+        document.body.classList.remove("project-list-gallery-ready");
+      }
+      wasProjectListSettled = isProjectListSettled;
       wasProjectListReady = isProjectListReady;
       document.body.classList.toggle("nav-shadow-ready", informationProgress > 0.45);
       document.body.classList.toggle("custom-cursor-active", supportsFinePointer && progress > 0.58);
@@ -3320,6 +3791,35 @@
     }
 
     window.addEventListener("scroll", handlePageScroll, { passive: true });
+
+    projectListGalleryScroll?.addEventListener("wheel", (event) => {
+      if (!document.body.classList.contains("project-list-gallery-ready")) return;
+      if (document.body.classList.contains("project-detail-open")) return;
+      if (event.deltaY >= 0 || projectListGalleryScroll.scrollTop > 2) {
+        projectListExitWheel = 0;
+        return;
+      }
+
+        const now = performance.now();
+      if (now - projectListExitWheelTime > 420) {
+        projectListExitWheel = 0;
+      }
+      projectListExitWheelTime = now;
+      projectListExitWheel += Math.abs(event.deltaY);
+
+      if (Math.abs(event.deltaY) < 82 && projectListExitWheel < 180) {
+        return;
+      }
+
+        event.preventDefault();
+      projectListExitWheel = 0;
+      if (scrollSnapTimer) {
+        window.clearTimeout(scrollSnapTimer);
+        scrollSnapTimer = null;
+      }
+      closeProjectDetail();
+      window.scrollTo({ top: getScrollDistance() * 3, behavior: "smooth" });
+    }, { passive: false });
 
     function renderSiteCursor() {
       if (!siteCursor || !cursorLineX || !cursorLineY || !cursorBox) return;
@@ -3500,6 +4000,75 @@
     window.addEventListener("mouseleave", () => {
       document.body.classList.remove("cursor-seen");
       document.body.classList.remove("project-cursor-red");
+    });
+
+    function setProjectDetailText(node, value = "") {
+      if (!node) return;
+      const text = value.trim();
+      node.textContent = text;
+      node.hidden = text.length === 0;
+    }
+
+    function openProjectDetail(projectTitle = "", projectImageSrc = "") {
+      if (!projectDetailShell) return;
+      const detail = projectDetails[projectTitle] || {
+        title: projectTitle,
+        subtitleCn: "",
+        subtitleEn: "",
+        infoCn: "",
+        infoEn: "",
+      };
+      projectDetailShell.setAttribute("aria-hidden", "false");
+      projectDetailShell.dataset.project = projectTitle;
+      if (projectDetailThumb) {
+        projectDetailThumb.src = projectImageSrc;
+        projectDetailThumb.alt = projectTitle;
+      }
+      setProjectDetailText(projectDetailTitle, detail.title);
+      setProjectDetailText(projectDetailSubtitleCn, detail.subtitleCn);
+      setProjectDetailText(projectDetailSubtitleEn, detail.subtitleEn);
+      setProjectDetailText(projectDetailInfoCn, detail.infoCn);
+      setProjectDetailText(projectDetailInfoEn, detail.infoEn);
+      document.body.classList.add("project-detail-open");
+    }
+
+    function closeProjectDetail() {
+      if (!projectDetailShell) return;
+      document.body.classList.remove("project-detail-open");
+      projectDetailShell.setAttribute("aria-hidden", "true");
+      projectDetailShell.dataset.project = "";
+      if (projectDetailThumb) {
+        projectDetailThumb.removeAttribute("src");
+        projectDetailThumb.alt = "";
+      }
+      setProjectDetailText(projectDetailTitle, "");
+      setProjectDetailText(projectDetailSubtitleCn, "");
+      setProjectDetailText(projectDetailSubtitleEn, "");
+      setProjectDetailText(projectDetailInfoCn, "");
+      setProjectDetailText(projectDetailInfoEn, "");
+    }
+
+    projectThumbs.forEach((thumb) => {
+      thumb.setAttribute("role", "button");
+      thumb.setAttribute("tabindex", "0");
+      thumb.addEventListener("click", () => {
+        const image = thumb.querySelector("img");
+        openProjectDetail(image ? image.alt : "", image ? image.getAttribute("src") : "");
+      });
+      thumb.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+          const image = thumb.querySelector("img");
+          openProjectDetail(image ? image.alt : "", image ? image.getAttribute("src") : "");
+        }
+      });
+    });
+
+    projectDetailBack?.addEventListener("click", closeProjectDetail);
+    window.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && document.body.classList.contains("project-detail-open")) {
+        closeProjectDetail();
+      }
     });
 
     identityNameParts.forEach((part) => {
